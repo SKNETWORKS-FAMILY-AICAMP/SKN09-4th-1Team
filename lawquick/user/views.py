@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def join_01(request):
+    return render(request, 'user/join_01.html')
