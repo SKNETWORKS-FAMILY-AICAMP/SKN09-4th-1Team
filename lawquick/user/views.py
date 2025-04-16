@@ -8,18 +8,20 @@ def home(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        user = authenticate_user(email, password)
-        if user:
+        user = get_user_by_email(email)
+        if not user:
+            messages.error(request, '입력한 이메일 주소를 찾을 수 없습니다.')
+        elif user.password != password:
+            messages.error(request, '비밀번호가 올바르지 않습니다.')
+        else:
             request.session['user_id'] = str(user.id)
-            
+
             # ✅ [임시 코드] 세션 기반 로그인 확인 메시지 (향후 삭제 예정)
             ######## ###### ###### ###### ###### ###### ###### ###### 
             request.session['user_email'] = user.email
             ####### ####### ###### ###### ###### ###### ###### ######
 
             return redirect('user:home')
-        else:
-            messages.error(request, '이메일 또는 비밀번호가 올바르지 않습니다.')
 
     return render(request, 'user/home_01.html')
 
