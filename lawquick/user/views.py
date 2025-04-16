@@ -16,8 +16,3 @@ def find_password_email_confirm(request):
 
 def find_password_complete(request):
     return render(request, 'user/search_03.html')
-
-def info(request):
-    if request.method == 'POST':
-        return redirect('user:info')
-    return render(request, 'user/info.html')
