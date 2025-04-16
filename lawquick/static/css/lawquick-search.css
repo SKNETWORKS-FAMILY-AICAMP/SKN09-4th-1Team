@@ -81,3 +81,16 @@ body {
 .btn-login:hover {
   background-color: #0047dd;
 }
+
+.username-box {
+  width: 100%;
+  padding: 16px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+  text-align: left;
+}
