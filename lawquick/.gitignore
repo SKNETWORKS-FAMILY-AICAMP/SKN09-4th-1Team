@@ -1,6 +1,11 @@
-# Secrets
+# 환경 변수 파일 (비밀 키 등)
 .env
 .env.*
 
+# Python 캐시 파일
 __pycache__/
 *.pyc
+
+# Django 마이그레이션 (버전 관리 불필요)
+**/migrations/
+!*/migrations/__init__.py

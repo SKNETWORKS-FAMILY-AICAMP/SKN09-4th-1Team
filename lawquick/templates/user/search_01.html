@@ -19,9 +19,23 @@
         회원가입 시, 사용했던 이메일 주소를 입력해주세요.<br />
         해당 이메일 주소로 인증 메일이 발송됩니다.
       </p>
+
       <form method="post" action="{% url 'user:find_password' %}">
         {% csrf_token %}
-        <input type="email" name="email" class="input-email" placeholder="이메일 입력" required />
+        <input 
+          type="email" 
+          name="email" 
+          class="input-email {% if messages %}error{% endif %}" 
+          placeholder="이메일 입력" 
+          required 
+        />
+
+        {% if messages %}
+          {% for message in messages %}
+            <p class="search-error-text">※ {{ message }}</p>
+          {% endfor %}
+        {% endif %}
+
         <button type="submit" class="btn-submit">이메일 인증 요청</button>
       </form>
     </div>

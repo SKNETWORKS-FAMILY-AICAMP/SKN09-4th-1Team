@@ -57,6 +57,10 @@ body {
   box-sizing: border-box;
 }
 
+.input-email.error {
+  margin-bottom: 0;
+}
+
 .notice {
   font-size: 12px;
   color: #999;
@@ -93,4 +97,10 @@ body {
   margin-bottom: 24px;
   box-sizing: border-box;
   text-align: left;
+}
+
+.search-error-text {
+  font-size: 13px;
+  color: #e53935;
+  font-weight: 400;
 }

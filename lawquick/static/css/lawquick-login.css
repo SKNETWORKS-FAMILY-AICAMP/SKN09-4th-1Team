@@ -9,6 +9,26 @@ body {
     align-items: stretch;
 }
 
+.login-error-box {
+    margin-top: -10px;
+}
+  
+.login-error-text {
+    font-size: 13px;
+    color: #e53935;
+    margin: 0;
+    padding-left: 4px;
+    line-height: 1.4;
+    margin: 20px 10px 0px 0px;
+}
+  
+.login-error-text.text-danger {
+    font-size: 13px !important;
+    color: #e53935 !important;
+    font-weight: normal;
+    margin: 20px 10px 0px 0px;
+}
+
 .container-flex {
     display: flex;
     flex: 1;
@@ -162,3 +182,13 @@ body {
         text-align: center;
     }
 }
+
+/* ✅ [임시] 로그인 확인 메시지 스타일  삭제 해야함*/
+/* *//* *//* *//* *//* *//* *//* *//* *//* */
+.login-confirm-msg {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+/* *//* *//* *//* *//* *//* *//* *//* *//* *//* */

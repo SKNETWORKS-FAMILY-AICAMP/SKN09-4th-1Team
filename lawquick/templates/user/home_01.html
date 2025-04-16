@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Koh+Santepheap&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="{% static 'css/lawquick-login.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/common.css' %}" />
 </head>
 <body>
   <div class="container-flex">
@@ -28,21 +29,48 @@
 
     <!-- 오른쪽 로그인 영역 -->
     <div class="right-box">
-      <form class="form-box">
+
+      <!-- ✅ [임시] 로그인 확인 메시지 (나중에 제거 예정) -->
+      <!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+      {% if request.session.user_email %}
+        <div style="background-color: #e9f7ef; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center;">
+          <p style="margin: 0; color: #0555F7; font-weight: bold;">
+            ✅ {{ request.session.user_email }} 님 환영합니다!
+          </p>
+          <form method="post" action="{% url 'user:logout' %}">
+            {% csrf_token %}
+            <button type="submit" style="border: none; background: none; color: #dc3545; font-weight: bold; cursor: pointer;">
+              로그아웃
+            </button>
+          </form>
+        </div>
+      {% endif %}
+      <!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+
+      <form method="post" action="{% url 'user:home' %}" class="form-box">
+        {% csrf_token %}
         <div class="form-title">LawQuick</div>
 
         <div class="mb-3">
-          <input type="email" class="form-control" placeholder="이메일" required />
+          <input type="email" name="email" class="form-control {% if messages %}is-invalid{% endif %}" placeholder="이메일" required />
         </div>
 
         <div class="mb-1">
-          <input type="password" class="form-control" placeholder="비밀번호" required />
+          <input type="password" name="password" class="form-control {% if messages %}is-invalid{% endif %}" placeholder="비밀번호" required />
         </div>
+
+        {% if messages %}
+          <div class="login-error-box">
+            {% for message in messages %}
+              <p class="login-error-text {% if 'error' in message.tags %}text-danger{% endif %}">※ {{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
 
         <a href="#" class="guest-link">비회원으로 진행하기</a>
 
         <div class="button-row">
-          <button type="button" class="btn-login">로그인</button>
+          <button type="submit" class="btn-login">로그인</button>
           <button type="button" class="btn-join">회원가입</button>
         </div>
 
