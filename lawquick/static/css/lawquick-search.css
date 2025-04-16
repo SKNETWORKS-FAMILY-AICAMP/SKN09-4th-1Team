@@ -11,7 +11,8 @@ body {
   text-align: center;
 }
 
-.title {
+.title,
+.page-title {
   font-size: 35px;
   font-weight: bold;
   color: #01143F;
@@ -22,26 +23,31 @@ body {
 .form-wrapper {
   background-color: #fff;
   border-radius: 20px;
-  padding: 30px 60px;
+  padding: 30px 50px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   text-align: left;
 }
 
-.form-title {
+.form-title,
+.section-title,
+.confirm-title {
   font-size: 18px;
   font-weight: bold;
   color: #01143F;
   margin-bottom: 10px;
 }
 
-.form-desc {
+.form-desc,
+.desc,
+.confirm-desc {
   font-size: 14px;
   color: #333;
   margin-bottom: 24px;
   line-height: 1.6;
 }
 
-.input-email {
+.input-email,
+.input-username {
   width: 100%;
   padding: 16px;
   font-size: 14px;
@@ -51,7 +57,15 @@ body {
   box-sizing: border-box;
 }
 
-.btn-submit {
+.notice {
+  font-size: 12px;
+  color: #999;
+  margin-top: -10px;
+  margin-bottom: 24px;
+}
+
+.btn-submit,
+.btn-login {
   width: 100%;
   padding: 16px;
   font-size: 16px;
@@ -63,6 +77,7 @@ body {
   cursor: pointer;
 }
 
-.btn-submit:hover {
+.btn-submit:hover,
+.btn-login:hover {
   background-color: #0047dd;
 }
