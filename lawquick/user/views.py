@@ -5,6 +5,14 @@ from .repositories.user_repository import user_exists_by_email, get_user_by_emai
 from .forms import UserInfoForm
 from .models import User
 import uuid
+import random
+import re
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.contrib.auth.hashers import make_password, check_password
+from django.conf import settings
 
 def home(request):
     if request.method == 'POST':
@@ -18,11 +26,6 @@ def home(request):
             messages.error(request, '비밀번호가 올바르지 않습니다.')
         else:
             request.session['user_id'] = str(user.id)
-
-            # ✅ [임시 코드] 세션 기반 로그인 확인 메시지 (향후 삭제 예정)
-            ######## ###### ###### ###### ###### ###### ###### ###### 
-            request.session['user_email'] = user.email
-            ####### ####### ###### ###### ###### ###### ###### ######
 
             return redirect('user:home')
 
@@ -100,3 +103,125 @@ def info_submit(request):
 def info_cancel(request):
     messages.info(request, "입력이 취소되었습니다.")
     return redirect("user:home")
+
+def join_user_form(request):
+    return render(request, 'user/join_01.html')
+
+
+def join_user_email_form(request):
+    if request.method == 'POST':
+        email_id = request.POST.get('email_id')
+        email_domain = request.POST.get('email_domain')
+        password = request.POST.get('password')
+        full_email = f"{email_id}@{email_domain}"
+
+        # 이메일 유효성 검사
+        try:
+            validate_email(full_email)
+        except ValidationError:
+            messages.error(request, '유효하지 않은 이메일 형식입니다.')
+            return redirect('user:join_01')
+
+        # 이메일 중복 체크
+        if User.objects.filter(email=full_email).exists():
+            messages.error(request, '이미 등록된 이메일입니다.')
+            return redirect('user:join_01')
+
+        # 비밀번호 형식 확인
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d|[^A-Za-z\d])(?=.{8,16}).*$', password):
+            messages.error(request, '비밀번호 형식이 올바르지 않습니다.')
+            return redirect('user:join_01')
+
+        # 인증코드 생성 후 세션 저장
+        auth_code = str(random.randint(10000, 99999))
+        request.session['user_email'] = full_email
+        request.session['user_password'] = password
+        request.session['auth_code'] = auth_code
+
+        # 메일 전송
+        subject = "[LawQuick] 이메일 인증번호 안내"
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to_email = [full_email]
+        verification_link = "http://localhost:8080/join/email/certification"
+
+        html_content = render_to_string('email_verification.html', {
+            'verification_code': auth_code,
+            'verification_link': verification_link
+        })
+
+        email = EmailMultiAlternatives(subject, '', from_email, to_email)
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+
+        return redirect('user:join_03')
+
+    return redirect('user:join_01')
+
+
+def join_user_email_certification(request):
+    if request.method == 'POST':
+        user_input = request.POST.get('auth_code')
+        session_code = request.session.get('auth_code')
+        email = request.session.get('user_email')
+        password = request.session.get('user_password')
+
+        # 세션 만료 처리
+        if not email or not password or not session_code:
+            messages.error(request, '세션이 만료되었습니다. 다시 회원가입을 진행해주세요.')
+            return redirect('user:join_01')
+
+        if user_input != session_code:
+            return render(request, 'user/join_03.html', {
+                'error': '❌ 인증번호가 일치하지 않습니다. 다시 입력해주세요.'
+            })
+
+        try:
+            validate_email(email)
+        except ValidationError:
+            return render(request, 'user/join_03.html', {
+                'error': '❌ 유효하지 않은 이메일 형식입니다.'
+            })
+
+        if User.objects.filter(email=email).exists():
+            return render(request, 'user/join_03.html', {
+                'error': '❌ 이미 등록된 이메일입니다. 로그인 또는 비밀번호 찾기를 이용해주세요.'
+            })
+
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d|[^A-Za-z\d])(?=.{8,16}).*$', password):
+            return render(request, 'user/join_03.html', {
+                'error': '❌ 비밀번호는 영문자와 숫자 또는 특수문자를 포함한 8~16자여야 합니다.'
+            })
+
+        try:
+            hashed_pw = make_password(password)
+            print("✅ 사용자 생성 시도 중:", email)
+
+            user = User(email=email, password=hashed_pw, is_verified=True)
+            user.save()
+
+            print("✅ 사용자 생성 완료:", user)
+        except Exception as e:
+            return render(request, 'user/join_03.html', {
+                'error': f'❌ 회원가입에 실패했습니다. 관리자에게 문의해주세요. ({str(e)})'
+            })
+
+        request.session.flush()
+        return redirect('user:join_04')
+
+    # GET 요청으로 들어온 경우
+    return render(request, 'user/join_03.html', {
+        'error': '❗ 인증 절차를 완료하려면 인증번호를 입력해주세요.'
+    })
+
+
+
+def join_terms_privacy(request):
+    return render(request, 'user/join_p_terms_privacy.html')
+
+
+def join_terms_service(request):
+    return render(request, 'user/join_p_terms_service.html')
+
+
+def join_user_complete(request):
+    return render(request, 'user/join_04.html')
