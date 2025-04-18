@@ -7,5 +7,7 @@ __pycache__/
 *.pyc
 
 # Django 마이그레이션 (버전 관리 불필요)
-**/migrations/
+*/migrations/
 !*/migrations/__init__.py
+
+db.sqlite3
