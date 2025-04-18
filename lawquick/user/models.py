@@ -1,21 +1,16 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import AbstractUser
 
-class User(AbstractUser):
+# 사용자 정보 
+class User(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    username = None  # ✅ username 필드 제거 (중복 방지)
-
-    USERNAME_FIELD = 'email'  # 로그인 시 사용할 필드
-    REQUIRED_FIELDS = []
-
     def __str__(self):
         return self.email
+
 
 # 사용자 추가 정보
 class UserInfo(models.Model):
@@ -25,7 +20,7 @@ class UserInfo(models.Model):
     # 혼인 정보
     marital_skipped = models.BooleanField(default=False)
     marital_status = models.CharField(max_length=50, blank=True, null=True)
-    marriage_duration = models.CharField(max_length=50, blank=True, null=True)
+    marriage_duration = models.FloatField(blank=True, null=True)
     divorce_status = models.CharField(max_length=50, blank=True, null=True)
 
     # 자녀 정보
