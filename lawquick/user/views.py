@@ -24,7 +24,7 @@ def home(request):
             request.session['user_email'] = user.email
             ####### ####### ###### ###### ###### ###### ###### ######
 
-            return redirect('user:home')
+            return redirect('chat:member_start')
 
     return render(request, 'user/home_01.html')
 
@@ -92,3 +92,9 @@ def info_submit(request):
 def info_cancel(request):
     messages.info(request, "입력이 취소되었습니다.")
     return redirect("user:home")
+
+from django.shortcuts import redirect
+
+def logout_view(request):
+    request.session.flush()  # 모든 세션 데이터 삭제 (로그아웃 효과)
+    return redirect('user:home')  # 홈 화면으로 이동 (필요 시 경로 수정)
