@@ -16,4 +16,11 @@ urlpatterns = [
     path('info/submit', views.info_submit, name='info_submit'), 
     path('info/cancel', views.info_cancel, name='info_cancel'), 
 
+    path('join/', views.join_user_form, name='join_01'),
+    path('join/popup_service', views.join_terms_service, name='join_terms_service'),
+    path('join/popup_privacy', views.join_terms_privacy, name='join_terms_privacy'),
+    path('join/email', views.join_user_email_form, name='join_02'),
+    path('join/email/certification', views.join_user_email_certification, name='join_03'),
+    path('join/complete/', views.join_user_complete, name='join_04'), 
+
 ]
