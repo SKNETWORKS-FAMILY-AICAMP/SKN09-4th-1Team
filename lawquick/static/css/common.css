@@ -23,3 +23,7 @@
   letter-spacing: -0.05em;
   text-decoration: none;
 }
+
+.is-invalid {
+  border: 1px solid #e53935;
+}
