@@ -3,7 +3,7 @@ from django.contrib import admin
 from django import forms
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
-from .models import User
+from .models import User, UserInfo
 
 # 사용자 정의 회원가입 폼
 class UserCreationForm(forms.ModelForm):
@@ -48,12 +48,12 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
 
-# 커스텀 UserAdmin 클래스
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    form = UserCreationForm
     list_display = ['email', 'is_verified', 'created_at']
     search_fields = ['email']
     ordering = ['-created_at']
 
-# 모델 등록 (중복 방지!)
-admin.site.register(User, UserAdmin)
+@admin.register(UserInfo)
+class UserInfoAdmin(admin.ModelAdmin):
+    list_display = ['user', 'created_at']

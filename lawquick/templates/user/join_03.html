@@ -27,7 +27,7 @@
       이메일로 전송된 인증번호 5자를 기입해주세요.
     </p>
 
-    <form method="post" action="{% url 'user:join_04' %}" class="join-auth-form">
+    <form method="post" action="{% url 'user:join_03' %}" class="join-auth-form">
       {% csrf_token %}
       <input type="text" name="auth_code" class="input-auth-code" placeholder="인증번호 입력" maxlength="5" required />
       <p class="helper-text" id="auth-helper">※ 인증메일은 1시간 이내 완료해주세요.</p>
