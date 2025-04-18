@@ -10,5 +10,6 @@ urlpatterns = [
     path('password/complete/', views.find_password_complete, name='find_password_complete'),
     path('info/', views.info, name='info'),
     path('info/submit', views.info_submit, name='info_submit'), 
+    path('info/cancel', views.info_cancel, name='info_cancel'), 
 
 ]

@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import UserInfo, User
+from django.contrib import messages
+from .forms import UserInfoForm
+from .models import User
 import uuid
 
 def home(request):
@@ -25,82 +27,46 @@ def info(request):
     return render(request, 'user/info.html')
 
 def get_or_create_user(request):
-    # 로그인한 사용자라면 그냥 반환
     if request.user.is_authenticated:
         return request.user, True
-
-    # 비회원일 경우 UUID 기반의 더미 사용자 생성
     temp_email = f"guest_{uuid.uuid4().hex[:10]}@example.com"
-    
-    # 비회원용 User 객체 생성 (저장)
     user = User.objects.create(email=temp_email, password="guest_password")
-    
     return user, False
 
 def info_submit(request):
     if request.method == "POST":
+        user, _ = get_or_create_user(request)
 
-        # 회원일 경우 이메일 반환, 비회원일 경우 생성해서 반환
-        user, check = get_or_create_user(request)
+        # ✅ Checkbox 값 'on' → True 처리
+        post_data = request.POST.copy()
+        post_data['marital_skipped'] = post_data.get('marriage_skip_btn') == 'on'
+        post_data['children_skipped'] = post_data.get('children_skip_btn') == 'on'
+        post_data['other_skipped'] = post_data.get('other_skip_btn') == 'on'
+        post_data['detail_skipped'] = post_data.get('detail_skip_btn') == 'on'
 
-        # ✅ 섹션 건너뛰기 여부
-        marital_skipped = bool(request.POST.get("marriage_skip_btn"))
-        children_skipped = bool(request.POST.get("children_skip_btn"))
-        other_skipped = bool(request.POST.get("other_skip_btn"))
-        detail_skipped = bool(request.POST.get("detail_skip_btn"))
+        # ✅ 자녀 유무 라디오 버튼 → Boolean 처리
+        if 'child_status' in post_data:
+            post_data['has_children'] = post_data.get('child_status') == 'yes'
 
-        # ✅ 혼인 관련
-        marital_status = None
-        marriage_duration = None
-        divorce_status = None
+        # ✅ 폼 객체 생성
+        form = UserInfoForm(post_data)
 
-        if not marital_skipped:
-            marital_status = request.POST.get("marriage_status")
-            duration_raw = request.POST.get("marriage_duration")
-            marriage_duration = request.POST.get("marriage_duration")
-            divorce_status = request.POST.get("divorce_status")
+        if form.is_valid():
+            user_info = form.save(commit=False)
+            user_info.user = user
+            user_info.save()
+            return redirect("user:home")
 
-        # ✅ 자녀 관련
-        has_children = None
-        children_ages = None
+        # ❗유효성 실패 시 경고 메시지 팝업으로 표시
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.warning(request, f"{error}")
 
-        if not children_skipped:
-            has_children = request.POST.get("child_status") == "yes"
-            children_ages = request.POST.get("child_age")
+        return render(request, "user/info.html", {"form": form})
 
-        # ✅ 기타 정보
-        property_range = None
-        experience = None
+    # GET 요청 시 빈 폼 렌더링
+    return render(request, "user/info.html", {"form": UserInfoForm()})
 
-        if not other_skipped:
-            property_range = request.POST.get("property_scope")
-            experience = request.POST.get("experience")
-
-        # ✅ 고민 정보
-        detail_info = None
-
-        if not detail_skipped:
-            detail_info = request.POST.get("detail_info")
-
-        # ✅ DB 저장
-        UserInfo.objects.create(
-            user=user,
-            marital_skipped=marital_skipped,
-            marital_status=marital_status,
-            marriage_duration=marriage_duration,
-            divorce_status=divorce_status,
-
-            children_skipped=children_skipped,
-            has_children=has_children,
-            children_ages=children_ages,
-
-            other_skipped=other_skipped,
-            property_range=property_range,
-            experience=experience,
-
-            detail_skipped=detail_skipped,
-            detail_info=detail_info
-        )
-
-        return redirect("user:home")  # or "chat" 페이지로 변경 예정
-    return redirect("user:info")
+def info_cancel(request):
+    messages.info(request, "입력이 취소되었습니다.")
+    return redirect("user:home")

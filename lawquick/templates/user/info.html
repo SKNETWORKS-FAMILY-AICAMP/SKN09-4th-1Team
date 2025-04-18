@@ -8,22 +8,17 @@
     <link rel="stylesheet" href="{% static 'css/common.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/lawquick-info.css' %}"/>
     <script src="{% static 'js/info.js' %}"></script>
-
-      <!-- ✅ Spoqa Han Sans Neo 폰트 링크 추가 -->
     <link href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">
-
-    
 </head>
 <body>
 {% include 'common/header.html'%}
 
-<form method="post" action="/info/submit">
+<form method="post" action="{% url 'user:info_submit' %}">
     {% csrf_token %}
     <div class="info-form">
         <div class="top-title">어떤 점이 고민이신가요?</div>
         <div class="form-box">
 
-            <!-- 회색 안내 박스 -->
             <div class="form-info">
                 <div class="form-title">의뢰인 정보를 알려주세요.</div>
                 <div class="form-comment">
@@ -31,6 +26,14 @@
                     <p>입력하신 정보는 오직 상담 목적으로만 활용되며, 철저한 보안 시스템 하에 관리됩니다.</p>
                 </div>
             </div>
+
+            {% if messages %}
+            <script>
+              {% for message in messages %}
+                alert("{{ message|escapejs }}");
+              {% endfor %}
+            </script>
+            {% endif %}
 
             <div class="input-form">
 
@@ -48,8 +51,8 @@
                     <div class="info-content">
                         <fieldset>
                             <div class="form-row">
-                                <label for="marriage-status" class="info-sub-title">혼인 상태</label>
-                                <select id="marriage-status" name="marriage_status">
+                                <label for="marital_status" class="info-sub-title">혼인 상태</label>
+                                <select id="marital_status" name="marital_status">
                                     <option value="" disabled selected>혼인 상태 선택</option>
                                     <option>법적 혼인</option>
                                     <option>사실혼</option>
@@ -64,8 +67,8 @@
                             </div>
 
                             <div class="form-row">
-                                <label for="divorce-status" class="info-sub-title">이혼 상태</label>
-                                <select id="divorce-status" name="divorce_status">
+                                <label for="divorce_status" class="info-sub-title">이혼 상태</label>
+                                <select id="divorce_status" name="divorce_status">
                                     <option value="" disabled selected>이혼 상태 선택</option>
                                     <option>이혼 고려중</option>
                                     <option>이혼 준비중</option>
@@ -93,17 +96,17 @@
                             <div class="form-row">
                                 <label class="info-sub-title">자녀 유무</label>
                                 <div class="radio-group">
-                                <input type="radio" id="child_yes" name="child_status" value="yes">
-                                <label for="child_yes" class="radio-button">유</label>
-                            
-                                <input type="radio" id="child_no" name="child_status" value="no">
-                                <label for="child_no" class="radio-button">무</label>
+                                    <input type="radio" id="child_yes" name="has_children" value="True">
+                                    <label for="child_yes" class="radio-button">유</label>
+
+                                    <input type="radio" id="child_no" name="has_children" value="False">
+                                    <label for="child_no" class="radio-button">무</label>
                                 </div>
                             </div>
 
                             <div class="form-row">
-                                <label for="child-age" class="info-sub-title">자녀 나이</label>
-                                <input type="text" id="child-age" name="child_age" placeholder="자녀 나이(예: 9세, 12세)">
+                                <label for="children_ages" class="info-sub-title">자녀 나이</label>
+                                <input type="text" id="children_ages" name="children_ages" placeholder="자녀 나이(예: 9세, 12세)">
                             </div>
                         </fieldset>
                     </div>
@@ -123,8 +126,8 @@
                     <div class="info-content">
                         <fieldset>
                             <div class="form-row">
-                                <label for="property-scope" class="info-sub-title">재산 범위</label>
-                                <select id="property-scope" name="property_scope">
+                                <label for="property_range" class="info-sub-title">재산 범위</label>
+                                <select id="property_range" name="property_range">
                                     <option value="" disabled selected>재산 범위 선택</option>
                                     <option>5천만원 미만</option>
                                     <option>5천만원 이상 ~ 1억원 미만</option>
@@ -166,7 +169,7 @@
                 <!-- 버튼 -->
                 <div class="button-row">
                     <button type="submit" class="btn-confirm">확인</button>
-                    <button type="reset" class="btn-cancel">취소</button>
+                    <button type="button" class="btn-cancel" onclick="handleCancel()">취소</button>
                 </div>
 
             </div>

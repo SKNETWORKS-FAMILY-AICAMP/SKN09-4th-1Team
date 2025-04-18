@@ -16,3 +16,9 @@ document.querySelector("form").addEventListener("submit", function(e) {
     e.preventDefault();
   }
 });
+
+function handleCancel() {
+  if (confirm("입력을 취소하고 이전 페이지로 돌아가시겠습니까?")) {
+    window.location.href = "/info/cancel";
+  }
+}
