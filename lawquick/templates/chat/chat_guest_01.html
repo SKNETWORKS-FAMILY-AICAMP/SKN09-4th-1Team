@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>게스트 채팅 - LawQuick</title>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/spoqa-han-sans@2.1.2/css/SpoqaHanSans.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Koh+Santepheap&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+
+  <link rel="stylesheet" href="{% static 'css/lawquick-chat-guest.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/chat_common.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    {% include 'common/chat_header.html' %}
+    <!-- ✅ 사이드바 -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div class="question-item">
+          <i class="fas fa-comment-alt"></i>
+          <input class="question-text" value="이혼 관련 질문" />
+          <div class="question-icons">
+            <i class="fas fa-pen"></i>
+          </div>
+        </div>
+        <hr class="sidebar-divider" />
+        <p class="sidebar-description">
+          로그인 시 모든 상담 내용이 저장되어 언제든지 다시 확인할 수 있어요.<br>
+          중요한 법률 조언을 필요할 때마다 쉽게 찾아볼 수 있습니다.
+        </p>
+        <button class="login-button" onclick="location.href='/'">로그인 하기</button>
+      </div>
+    </aside>
+
+    <!-- ✅ 메인 영역 -->
+    <div class="main-content">
+
+
+      <main class="chat-area" id="chat-area">
+        <div class="chat-messages-wrapper" id="chat-wrapper">
+          <!-- 기본 메시지 -->
+          <div class="message bot-message">
+            <div class="message-row bot">
+              <div class="bot-bubble">
+안녕하세요! lawquick입니다. 
+                <div class="response-time">출력 소요 시간: 0.05s</div>
+              </div>
+              <div class="timestamp left">12:49 AM</div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- ✅ 입력창 -->
+      <div class="chat-bottom-fixed">
+        <div class="chat-input-box">
+          <textarea id="user-input" placeholder="질문을 입력하세요."></textarea>
+          <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+
+      <!-- ✅ 아래로 이동 버튼 -->
+      <button id="scroll-down-btn" onclick="scrollToBottom()" title="맨 아래로 이동">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ 스크립트 -->
+  <script>
+    const userIconBtn = document.getElementById('userIconBtn');
+    const userDropdown = document.getElementById('userDropdown');
+  
+    userIconBtn.addEventListener('click', () => {
+      userDropdown.style.display = userDropdown.style.display === 'flex' ? 'none' : 'flex';
+    });
+  
+    // 다른 곳 클릭하면 닫기
+    document.addEventListener('click', (e) => {
+      if (!userIconBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+        userDropdown.style.display = 'none';
+      }
+    });
+
+    const chatWrapper = document.getElementById("chat-wrapper");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-button");
+  
+    function scrollToBottom() {
+      const chatArea = document.getElementById('chat-area');
+      const headerHeight = document.querySelector('.header').offsetHeight || 64;
+      chatArea.scrollTo({
+        top: chatArea.scrollHeight - headerHeight,
+        behavior: 'smooth'
+      });
+    }
+    
+  
+    // ✅ 사이드바 애니메이션 + 질문 불러오기
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.querySelector('.hamburger-btn');
+      const sidebar = document.getElementById('sidebar');
+      const wrapper = document.querySelector('.app-wrapper');
+  
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+        wrapper.classList.toggle('sidebar-open');
+      });
+  
+      // ✅ 1. localStorage에서 질문 불러오기
+      const savedQuestion = localStorage.getItem('guest_question');
+      if (savedQuestion) {
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+        const userMessage = `
+          <div class="message user-message">
+            <div class="message-row user">
+              <div class="user-bubble">${savedQuestion}</div>
+              <div class="timestamp right">${now}</div>
+            </div>
+          </div>`;
+        chatWrapper.insertAdjacentHTML("beforeend", userMessage);
+  
+        const botMessage = `
+          <div class="message bot-message">
+            <div class="message-row bot">
+              <div class="bot-bubble">
+                준비된 답변입니다.
+                <div class="response-time">출력 소요 시간: 0.50s</div>
+              </div>
+              <div class="timestamp left">${now}</div>
+            </div>
+          </div>`;
+        setTimeout(() => {
+          chatWrapper.insertAdjacentHTML("beforeend", botMessage);
+          scrollToBottom();
+        }, 500);
+  
+        localStorage.removeItem('guest_question'); // ✅ 질문은 한 번만 보여주고 제거
+      }
+    });
+  
+    sendBtn.addEventListener("click", () => {
+      const text = userInput.value.trim();
+      if (text) {
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+        // 1. 사용자 메시지 화면에 추가
+        const userMessage = `
+          <div class="message user-message">
+            <div class="message-row user">
+              <div class="user-bubble">${text}</div>
+              <div class="timestamp right">${now}</div>
+            </div>
+          </div>`;
+        chatWrapper.insertAdjacentHTML("beforeend", userMessage);
+    
+        // 2. 서버에 메시지 전송 (chat_id는 전역 변수로 넣어야 함)
+        fetch(`/chat/api/save_message/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie('csrftoken')
+          },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,  // ← 이 변수는 아래에 설명
+            sender: "user",
+            message: text
+          })
+        });
+    
+        // 3. 봇 응답 화면에 추가 (DB 저장은 나중에)
+        const botMessage = `
+          <div class="message bot-message">
+            <div class="message-row bot">
+              <div class="bot-bubble">
+                준비된 답변입니다.
+                <div class="response-time">출력 소요 시간: 0.50s</div>
+              </div>
+              <div class="timestamp left">${now}</div>
+            </div>
+          </div>`;
+        setTimeout(() => {
+          chatWrapper.insertAdjacentHTML("beforeend", botMessage);
+          scrollToBottom();
+        }, 500);
+    
+        userInput.value = "";
+        scrollToBottom();
+      }
+    });
+    
+  </script>
+  
+</body>
+</html>
