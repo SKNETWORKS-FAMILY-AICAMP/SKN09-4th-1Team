@@ -36,9 +36,13 @@ def chat_member_start(request):
     return render(request, 'chat/chat_member_00.html')
 
 # 게스트 채팅 화면
-def chat_guest(request, chat_id):
-    chat = Chat.objects.get(id=chat_id)
-    messages = Message.objects.filter(chat=chat).order_by('created_at')
+def chat_guest(request, chat_id=None):
+    chat = None
+    messages = []
+
+    if chat_id:
+        chat = Chat.objects.get(id=chat_id)
+        messages = Message.objects.filter(chat=chat).order_by('created_at')
 
     context = {
         'chat': chat,
@@ -46,7 +50,6 @@ def chat_guest(request, chat_id):
     }
 
     return render(request, 'chat/chat_guest_01.html', context)
-
 # 멤버 채팅 화면
 def chat_member(request):
     # chat_id에 따른 채팅 화면을 보여줌
