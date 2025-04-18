@@ -14,14 +14,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-
   <div class="app-wrapper">
     {% include 'common/chat_header.html' %}
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-inner">
         <div class="question-item">
           <i class="fas fa-comment-alt"></i>
-          <input class="question-text" value="이혼 관련 질문" />
+          <input class="question-text" value="{{ chat.chat_title }}" readonly />
           <div class="question-icons">
             <i class="fas fa-pen"></i>
           </div>
@@ -38,141 +37,56 @@
     <div class="main-content">
       <main class="chat-area" id="chat-area">
         <div class="chat-messages-wrapper" id="chat-wrapper">
-          <div class="message bot-message">
-            <div class="message-row bot">
-              <div class="bot-bubble">
-                안녕하세요! lawquick입니다. 
-                <div class="response-time">출력 소요 시간: 0.05s</div>
+          {% for message in messages %}
+            {% if message.sender == 'user' %}
+              <div class="message user-message">
+                <div class="message-row user">
+                  <div class="user-bubble">{{ message.message }}</div>
+                  <div class="timestamp right">{{ message.created_at|time:"H:i" }}</div>
+                </div>
               </div>
-              <div class="timestamp left">12:49 AM</div>
-            </div>
-          </div>
+            {% else %}
+              <div class="message bot-message">
+                <div class="message-row bot">
+                  <div class="bot-bubble">
+                    {{ message.message }}
+                    <div class="response-time">출력 소요 시간: 0.50s</div>
+                  </div>
+                  <div class="timestamp left">{{ message.created_at|time:"H:i" }}</div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </main>
-    </div> <!-- ✅ .main-content 닫힘 -->
-    
-    <!-- ✅ 이제는 .app-wrapper 밖 -->
-    <div class="chat-bottom-fixed">
-      <div class="chat-input-box">
-        <textarea id="user-input" placeholder="질문을 입력하세요."></textarea>
-        <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+
+      <div class="chat-bottom-fixed">
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="chat-input-box">
+            <textarea id="user-input" name="user_input" placeholder="질문을 입력하세요." required></textarea>
+            <button id="send-button" type="submit"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </form>
       </div>
+
+      <button id="scroll-down-btn" onclick="scrollToBottom()" title="맨 아래로 이동">
+        <i class="fas fa-chevron-down"></i>
+      </button>
     </div>
-    
+  </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const userIconBtn = document.getElementById('userIconBtn');
-      const userDropdown = document.getElementById('userDropdown');
-      const chatWrapper = document.getElementById("chat-wrapper");
-      const userInput = document.getElementById("user-input");
-      const sendBtn = document.getElementById("send-button");
-      const toggleBtn = document.querySelector('.hamburger-btn');
-      const sidebar = document.getElementById('sidebar');
-      const wrapper = document.querySelector('.app-wrapper');
-
-      function scrollToBottom() {
-        chatWrapper.scrollTo({
-          top: chatWrapper.scrollHeight,
-          behavior: 'smooth'
-        });
-      }
-
-      userIconBtn?.addEventListener('click', () => {
-        userDropdown.style.display = userDropdown.style.display === 'flex' ? 'none' : 'flex';
+    function scrollToBottom() {
+      const chatArea = document.getElementById('chat-area');
+      const headerHeight = document.querySelector('.header')?.offsetHeight || 64;
+      chatArea.scrollTo({
+        top: chatArea.scrollHeight - headerHeight,
+        behavior: 'smooth'
       });
+    }
 
-      document.addEventListener('click', (e) => {
-        if (!userIconBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-          userDropdown.style.display = 'none';
-        }
-      });
-
-      toggleBtn?.addEventListener('click', () => {
-        sidebar.classList.toggle('active');
-        wrapper.classList.toggle('sidebar-open');
-      });
-
-      function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
-
-        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        const userMessage = `
-          <div class="message user-message">
-            <div class="message-row user">
-              <div class="user-bubble">${text}</div>
-              <div class="timestamp right">${now}</div>
-            </div>
-          </div>`;
-        chatWrapper.insertAdjacentHTML("beforeend", userMessage);
-
-        const botMessage = `
-          <div class="message bot-message">
-            <div class="message-row bot">
-              <div class="bot-bubble">
-                준비된 답변입니다.
-                <div class="response-time">출력 소요 시간: 0.50s</div>
-              </div>
-              <div class="timestamp left">${now}</div>
-            </div>
-          </div>`;
-        setTimeout(() => {
-          chatWrapper.insertAdjacentHTML("beforeend", botMessage);
-          scrollToBottom();
-        }, 500);
-
-        userInput.value = "";
-        userInput.style.height = "auto";
-        scrollToBottom();
-      }
-
-      sendBtn.addEventListener("click", sendMessage);
-
-      userInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          sendMessage();
-        }
-      });
-
-      userInput.addEventListener("input", () => {
-        userInput.style.height = "auto";
-        userInput.style.height = Math.min(userInput.scrollHeight, 160) + "px";
-      });
-
-      const savedQuestion = localStorage.getItem('guest_question');
-      if (savedQuestion) {
-        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        const userMessage = `
-          <div class="message user-message">
-            <div class="message-row user">
-              <div class="user-bubble">${savedQuestion}</div>
-              <div class="timestamp right">${now}</div>
-            </div>
-          </div>`;
-        chatWrapper.insertAdjacentHTML("beforeend", userMessage);
-
-        const botMessage = `
-          <div class="message bot-message">
-            <div class="message-row bot">
-              <div class="bot-bubble">
-                준비된 답변입니다.
-                <div class="response-time">출력 소요 시간: 0.50s</div>
-              </div>
-              <div class="timestamp left">${now}</div>
-            </div>
-          </div>`;
-        setTimeout(() => {
-          chatWrapper.insertAdjacentHTML("beforeend", botMessage);
-          scrollToBottom();
-        }, 500);
-
-        localStorage.removeItem('guest_question');
-      }
-    });
+    document.addEventListener("DOMContentLoaded", scrollToBottom);
   </script>
 </body>
 </html>
