@@ -37,11 +37,6 @@ def get_or_create_user(request):
     
     return user, False
 
-def info(request):
-    if request.method == 'POST':
-        return redirect('user:info')
-    return render(request, 'user/info.html')
-
 def info_submit(request):
     if request.method == "POST":
 

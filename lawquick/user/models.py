@@ -1,17 +1,21 @@
 import uuid
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser
 
-
-# 사용자 정보 
-class User(models.Model):
+class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    username = None  # ✅ username 필드 제거 (중복 방지)
+
+    USERNAME_FIELD = 'email'  # 로그인 시 사용할 필드
+    REQUIRED_FIELDS = []
+
     def __str__(self):
         return self.email
-
 
 # 사용자 추가 정보
 class UserInfo(models.Model):
