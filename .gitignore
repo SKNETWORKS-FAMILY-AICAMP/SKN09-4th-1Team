@@ -2,3 +2,6 @@ database.mwb.bak
 database.mwb
 .env
 *.sql
+
+__pycache__/
+*.pyc
