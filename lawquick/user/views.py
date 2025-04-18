@@ -41,7 +41,15 @@ def find_password(request):
 
 
 def find_password_complete(request):
-    return render(request, 'user/search_03.html')
+    email = request.session.get('reset_email')
+    user = get_user_by_email(email)
+    return render(request, 'user/search_02.html', {'user': user})
+
+
+def logout_view(request):
+    request.session.flush()
+    messages.info(request, "로그아웃 되었습니다.")
+    return redirect('user:home')
 
 def info(request):
     if request.method == 'POST':
@@ -59,18 +67,18 @@ def info_submit(request):
     if request.method == "POST":
         user, _ = get_or_create_user(request)
 
-        # ✅ Checkbox 값 'on' → True 처리
+        #  Checkbox 값 'on' → True 처리
         post_data = request.POST.copy()
         post_data['marital_skipped'] = post_data.get('marriage_skip_btn') == 'on'
         post_data['children_skipped'] = post_data.get('children_skip_btn') == 'on'
         post_data['other_skipped'] = post_data.get('other_skip_btn') == 'on'
         post_data['detail_skipped'] = post_data.get('detail_skip_btn') == 'on'
 
-        # ✅ 자녀 유무 라디오 버튼 → Boolean 처리
+        # 자녀 유무 라디오 버튼 → Boolean 처리
         if 'child_status' in post_data:
             post_data['has_children'] = post_data.get('child_status') == 'yes'
 
-        # ✅ 폼 객체 생성
+        # 폼 객체 생성
         form = UserInfoForm(post_data)
 
         if form.is_valid():
@@ -79,7 +87,7 @@ def info_submit(request):
             user_info.save()
             return redirect("user:home")
 
-        # ❗유효성 실패 시 경고 메시지 팝업으로 표시
+        # 유효성 실패 시 경고 메시지 팝업으로 표시
         for field, errors in form.errors.items():
             for error in errors:
                 messages.warning(request, f"{error}")
