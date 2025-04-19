@@ -13,5 +13,7 @@ urlpatterns = [
 
     # 멤버 채팅
     path('member/00/', views.chat_member_start, name='member_start'),
-    # 추후 멤버도 저장 플로우 추가
+    path('chat/member/01/', views.chat_member_save, name='chat_member_save'),  # ← 신규 추가
+    path('member/chat/<int:chat_id>/', views.chat_member, name='member_chat_with_id'),  # ← 신규 추가
+
 ]

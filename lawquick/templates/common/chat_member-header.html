@@ -1,0 +1,20 @@
+<header class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      {% comment %} <button class="hamburger-btn" aria-label="Open sidebar">☰</button> {% endcomment %}
+      <button class="hamburger-btn">☰</button>
+      <a href="/" class="logo">Lawquick</a>
+    </div>
+    <div class="header-right">
+      <button class="user-icon-btn" id="userIconBtn" aria-label="User menu">
+        <i class="fas fa-user"></i>
+      </button>
+
+      <!-- ✅ 드롭다운 메뉴 -->
+      <div class="user-dropdown" id="userDropdown">
+        <button onclick="location.href='/privacy'">개인정보 입력</button>
+        <button onclick="location.href='/login'">로그인</button>
+      </div>
+    </div>
+  </div>
+</header>

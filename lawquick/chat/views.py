@@ -5,6 +5,7 @@ from .models import Chat, Message
 from user.models import User  
 import uuid
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 # from user.models import User  # 또는 get_or_create_user로 대체 가능
 
 
@@ -110,29 +111,56 @@ def chat_guest(request, chat_id):
 # 유진 끝 
 
 # 멤버 채팅 시작 화면
+# @login_required
+# 로그인 없이 회원 채팅 시작
 def chat_member_start(request):
+    # ⚠️ 개발용 사용자 강제 설정 (실제로는 삭제해야 함!)
+    if not request.user.is_authenticated:
+        request.user = User.objects.get(email='test@example.com')  # 존재하는 회원이어야 함
+
     return render(request, 'chat/chat_member_00.html')
 
-# 게스트 채팅 화면
-def chat_guest(request, chat_id=None):
-    chat = None
-    messages = []
+# @login_required
+def chat_member_save(request):
+    if request.method == "POST":
+        user = request.user
+        if not user.is_authenticated:
+            user = User.objects.get(email='test@example.com')  # 개발용 사용자
 
-    if chat_id:
-        chat = Chat.objects.get(id=chat_id)
-        messages = Message.objects.filter(chat=chat).order_by('created_at')
+        user_input = request.POST.get("user_input")
+        if not user_input:
+            return redirect("chat:member_start")
 
-    context = {
+        chat = Chat.objects.create(
+            user=user,
+            chat_title=user_input,
+            created_at=timezone.now()
+        )
+
+        Message.objects.create(chat=chat, sender='user', message=user_input, created_at=timezone.now())
+        Message.objects.create(chat=chat, sender='bot', message="준비된 답변입니다.", created_at=timezone.now())
+
+        return redirect('chat:member_chat_with_id', chat_id=chat.id)
+
+    return redirect("chat:member_start")
+
+#
+# @login_required
+def chat_member(request, chat_id):
+    chat = Chat.objects.get(id=chat_id)
+
+    if request.method == "POST":
+        user_input = request.POST.get("user_input")
+        if user_input:
+            Message.objects.create(chat=chat, sender="user", message=user_input, created_at=timezone.now())
+            Message.objects.create(chat=chat, sender="bot", message="준비된 답변입니다.", created_at=timezone.now())
+            return redirect('chat:member_chat_with_id', chat_id=chat.id)
+
+    messages = Message.objects.filter(chat=chat).order_by('created_at')
+    return render(request, 'chat/chat_member_01.html', {
         'chat': chat,
         'messages': messages,
-    }
-
-    return render(request, 'chat/chat_guest_01.html', context)
-
-# 멤버 채팅 화면
-def chat_member(request):
-    # chat_id에 따른 채팅 화면을 보여줌
-    return render(request, f'chat/chat_member_01.html')
+    })
 
 
 
