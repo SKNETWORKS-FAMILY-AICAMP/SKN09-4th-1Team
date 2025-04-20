@@ -221,3 +221,40 @@ def chat_entry(request):
             return redirect('chat:member_start')
     else:
         return redirect('chat:chat_guest_start')
+
+@require_POST
+@csrf_exempt
+def chat_member_delete(request, chat_id):
+    try:
+        chat = Chat.objects.get(id=chat_id)
+        user_id = request.session.get('user_id')
+
+        if not user_id or str(chat.user.id) != str(user_id):
+            return JsonResponse({'status': 'unauthorized'}, status=403)
+
+        chat.delete()
+        return JsonResponse({'status': 'ok'})
+    except Chat.DoesNotExist:
+        return JsonResponse({'status': 'not_found'}, status=404)
+
+
+@require_POST
+@csrf_exempt
+def chat_member_update_title(request, chat_id):
+    import json
+    try:
+        chat = Chat.objects.get(id=chat_id)
+        user_id = request.session.get('user_id')
+
+        if not user_id or str(chat.user.id) != str(user_id):
+            return JsonResponse({'status': 'unauthorized'}, status=403)
+
+        data = json.loads(request.body)
+        new_title = data.get('title', '').strip()
+        if new_title:
+            chat.chat_title = new_title
+            chat.save()
+            return JsonResponse({'status': 'ok'})
+        return JsonResponse({'status': 'empty_title'}, status=400)
+    except Chat.DoesNotExist:
+        return JsonResponse({'status': 'not_found'}, status=404)
