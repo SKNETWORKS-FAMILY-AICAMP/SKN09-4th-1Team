@@ -23,6 +23,6 @@ urlpatterns = [
     path('', include('chat.urls')),
     # path('chat/', include(('chat.urls', 'chat'), namespace='chat')),  # <- 이 부분이 중요!
     path('chat/', include('chat.urls', namespace='chat'))
-    
-
 ]
+
+
