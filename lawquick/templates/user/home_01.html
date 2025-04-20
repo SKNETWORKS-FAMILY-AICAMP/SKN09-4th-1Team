@@ -29,7 +29,6 @@
 
     <!-- 오른쪽 로그인 영역 -->
     <div class="right-box">
-
       <form method="post" action="{% url 'user:home' %}" class="form-box">
         {% csrf_token %}
         <div class="form-title">LawQuick</div>
@@ -50,10 +49,7 @@
           </div>
         {% endif %}
 
-        {% comment %} <a href="{% url 'chat:guest_start' %}" class="guest-link">비회원으로 시작하기</a> {% endcomment %}
-        <a href="{% url 'chat:chat_guest_start' %}" style="color: blue; font-weight: bold;">비회원으로 시작하기</a>
-
-
+        <a href="#" class="guest-link">비회원으로 진행하기</a>
 
         <div class="button-row">
           <button type="submit" class="btn-login">로그인</button>
