@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 # from user.models import User  # 또는 get_or_create_user로 대체 가능
 from django.contrib.auth import login
 from user.services.auth_service import authenticate_user
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
 
 def home(request):
     if request.method == 'POST':
@@ -189,10 +192,20 @@ def chat_member(request, chat_id):
             return redirect('chat:member_chat_with_id', chat_id=chat.id)
 
     messages = Message.objects.filter(chat=chat).order_by('created_at')
+    chat_list = Chat.objects.filter(user=user).order_by('-created_at')
+    
     return render(request, 'chat/chat_member_01.html', {
         'chat': chat,
         'messages': messages,
+        'chat_list':chat_list,
     })
+
+@require_POST
+def chat_member_delete(request, chat_id):
+    chat = Chat.objects.get(id=chat_id, user=request.user)
+    chat.delete()
+    return JsonResponse({'status': 'ok'})
+
 
 def chat_entry(request):
     user_id = request.session.get('user_id')

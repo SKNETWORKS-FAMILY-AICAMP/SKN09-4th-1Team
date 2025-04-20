@@ -16,4 +16,6 @@ urlpatterns = [
     path('chat/member/01/', views.chat_member_save, name='chat_member_save'),  # ← 신규 추가
     path('member/chat/<int:chat_id>/', views.chat_member, name='member_chat_with_id'),  # ← 신규 추가
 
+    path('member/delete/<int:chat_id>/', views.chat_member_delete, name='member_chat_delete'),
+
 ]
