@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 채팅 - LawQuick</title>
+  <link href="https://cdn.jsdelivr.net/npm/spoqa-han-sans@2.1.2/css/SpoqaHanSans.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Koh+Santepheap&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/lawquick-chat-member.css' %}">
+  <script defer src="{% static 'js/chat_member_sidebar.js' %}"></script>
+</head>
+<body>
+  <!-- ✅ 사이드바 -->
+  {% include 'chat/sidebar.html' %}
+
+  <div class="app-wrapper">
+    <!-- ✅ 전체 콘텐츠 -->
+    <div class="main-content">
+
+      <!-- ✅ 헤더 -->
+      {% include 'common/chat_member-header.html' %}
+
+      <!-- ✅ 채팅 영역 -->
+      <main class="chat-area" id="chat-area">
+        <div class="chat-messages-wrapper">
+          {% for message in messages %}
+            {% if message.sender == 'user' %}
+            <div class="message-row user">
+              <div class="user-bubble">{{ message.message }}</div>
+              <div class="timestamp">{{ message.created_at|time:"H:i" }}</div>
+            </div>
+            {% else %}
+            <div class="message-row bot">
+              <div class="bot-bubble">
+                {{ message.message }}
+                <div class="response-time">출력 소요 시간: {{ message.duration|default:"0.50" }}s</div>
+              </div>
+              <div class="timestamp">{{ message.created_at|time:"H:i" }}</div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </main>
+
+      <!-- ✅ 입력창 -->
+      <form method="POST" action="">
+        {% csrf_token %}
+        <div class="chat-bottom-fixed">
+          <div class="chat-input-box">
+            <textarea id="user-input" name="user_input" placeholder="질문을 입력하세요." required></textarea>
+            <button id="send-button" type="submit"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</body>
+</html>

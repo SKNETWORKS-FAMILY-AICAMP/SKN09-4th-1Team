@@ -5,6 +5,7 @@ from .repositories.user_repository import user_exists_by_email, get_user_by_emai
 from .forms import UserInfoForm
 from .models import User
 import uuid
+from django.contrib.auth import login
 import random
 import re
 from django.core.mail import EmailMultiAlternatives
@@ -25,10 +26,12 @@ def home(request):
         elif user.password != password:
             messages.error(request, '비밀번호가 올바르지 않습니다.')
         else:
+            # login(request, user) # 세션 저장 
             request.session['user_id'] = str(user.id)
+            request.session['user_email'] = user.email
+            next_url = request.GET.get('next') or 'chat:member_start'
 
-            return redirect('user:home')
-
+            return redirect(next_url)
     return render(request, 'user/home_01.html')
 
 
@@ -103,6 +106,10 @@ def info_submit(request):
 def info_cancel(request):
     messages.info(request, "입력이 취소되었습니다.")
     return redirect("user:home")
+
+def logout_view(request):
+    request.session.flush()  # 모든 세션 데이터 삭제 (로그아웃 효과)
+    return redirect('user:home')  # 홈 화면으로 이동 (필요 시 경로 수정)
 
 def join_user_form(request):
     return render(request, 'user/join_01.html')
