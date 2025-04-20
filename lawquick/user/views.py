@@ -5,6 +5,7 @@ from .repositories.user_repository import user_exists_by_email, get_user_by_emai
 from .forms import UserInfoForm
 from .models import User
 import uuid
+from django.contrib.auth import login
 
 def home(request):
     if request.method == 'POST':
@@ -17,14 +18,17 @@ def home(request):
         elif user.password != password:
             messages.error(request, '비밀번호가 올바르지 않습니다.')
         else:
+            # login(request, user) # 세션 저장 
             request.session['user_id'] = str(user.id)
+            request.session['user_email'] = user.email
 
             # ✅ [임시 코드] 세션 기반 로그인 확인 메시지 (향후 삭제 예정)
             ######## ###### ###### ###### ###### ###### ###### ###### 
             request.session['user_email'] = user.email
             ####### ####### ###### ###### ###### ###### ###### ######
 
-            return redirect('chat:member_start')
+            next_url = request.GET.get('next') or 'chat:member_start'
+            return redirect(next_url)
 
     return render(request, 'user/home_01.html')
 

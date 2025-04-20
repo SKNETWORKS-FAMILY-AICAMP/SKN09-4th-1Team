@@ -7,10 +7,21 @@ import uuid
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 # from user.models import User  # 또는 get_or_create_user로 대체 가능
-
+from django.contrib.auth import login
+from user.services.auth_service import authenticate_user
 
 def home(request):
-    return render(request, 'user/home_01.html')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = authenticate_user(email, password)
+        if user:
+            # login(request, user)
+            request.session['user_id'] = str(user.id)
+            request.session['user_email'] = user.email
+            next_url = request.GET.get('next') or 'chat:member_start'
+            return redirect(next_url)
 
 # 유진 시작
 def get_or_create_guest_user(request):
@@ -110,22 +121,34 @@ def chat_guest(request, chat_id):
     })
 # 유진 끝 
 
-# 멤버 채팅 시작 화면
-# @login_required
-# 로그인 없이 회원 채팅 시작
+# 멤버 채팅 시작 화면면
+# @login_required(login_url='/')
 def chat_member_start(request):
-    # ⚠️ 개발용 사용자 강제 설정 (실제로는 삭제해야 함!)
-    if not request.user.is_authenticated:
-        request.user = User.objects.get(email='test@example.com')  # 존재하는 회원이어야 함
+    # # ⚠️ 개발용 사용자 강제 설정 (실제로는 삭제해야 함!)
+    # if not request.user.is_authenticated:
+    #     request.user = User.objects.get(email='test@example.com')  # 존재하는 회원이어야 함
+    
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('/')  # 로그인 페이지로
 
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return redirect('/')
+    
     return render(request, 'chat/chat_member_00.html')
 
-# @login_required
 def chat_member_save(request):
     if request.method == "POST":
-        user = request.user
-        if not user.is_authenticated:
-            user = User.objects.get(email='test@example.com')  # 개발용 사용자
+        user_id = request.session.get("user_id")
+        if not user_id:
+            return redirect("/")
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return redirect("/")
 
         user_input = request.POST.get("user_input")
         if not user_input:
@@ -144,10 +167,19 @@ def chat_member_save(request):
 
     return redirect("chat:member_start")
 
-#
-# @login_required
 def chat_member(request, chat_id):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return redirect("/")
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return redirect("/")
+
     chat = Chat.objects.get(id=chat_id)
+    if chat.user != user:
+        return redirect("chat:member_start")
 
     if request.method == "POST":
         user_input = request.POST.get("user_input")
@@ -162,13 +194,17 @@ def chat_member(request, chat_id):
         'messages': messages,
     })
 
-
-
 def chat_entry(request):
-    user, is_registered = get_or_create_user(request)
-
-    if is_registered:
-        return redirect('chat:member_chat')  # 회원용 채팅 화면
+    user_id = request.session.get('user_id')
+    if user_id:
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return redirect('/')
+        latest_chat = Chat.objects.filter(user=user).order_by('-created_at').first()
+        if latest_chat:
+            return redirect('chat:member_chat_with_id', chat_id=latest_chat.id)
+        else:
+            return redirect('chat:member_start')
     else:
-        return redirect('chat:guest_chat')   # 비회원용 채팅 화면
-    
+        return redirect('chat:chat_guest_start')

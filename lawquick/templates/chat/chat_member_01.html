@@ -166,7 +166,7 @@
       <a href="#" class="logo">LawQuick</a>
       <button class="user-icon-btn" id="userIconBtn"><i class="fas fa-user"></i></button>
       <div class="user-dropdown" id="userDropdown">
-        <button>{{ request.session.user_email }}</button>
+        <button>{{request.user.email}}</button>
         <button onclick="location.href='/info'">개인정보 수정</button>
         <button onclick="location.href='/logout/'">로그아웃</button>
       </div>
