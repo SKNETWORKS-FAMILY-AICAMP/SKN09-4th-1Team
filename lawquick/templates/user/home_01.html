@@ -30,23 +30,6 @@
     <!-- 오른쪽 로그인 영역 -->
     <div class="right-box">
 
-      {% comment %} <!-- ✅ [임시] 로그인 확인 메시지 (나중에 제거 예정) -->
-      <!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
-      {% if request.session.user_email %}
-        <div style="background-color: #e9f7ef; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center;">
-          <p style="margin: 0; color: #0555F7; font-weight: bold;">
-            ✅ {{ request.session.user_email }} 님 환영합니다!
-          </p>
-          <form method="post" action="{% url 'user:logout' %}">
-            {% csrf_token %}
-            <button type="submit" style="border: none; background: none; color: #dc3545; font-weight: bold; cursor: pointer;">
-              로그아웃
-            </button>
-          </form>
-        </div>
-      {% endif %}
-      <!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----> {% endcomment %}
-
       <form method="post" action="{% url 'user:home' %}" class="form-box">
         {% csrf_token %}
         <div class="form-title">LawQuick</div>
@@ -74,7 +57,7 @@
 
         <div class="button-row">
           <button type="submit" class="btn-login">로그인</button>
-          <button type="button" class="btn-join">회원가입</button>
+          <button type="button" class="btn-join" onclick="location.href='{% url 'user:join_01' %}'">회원가입</button>
         </div>
 
         <a href="{% url 'user:find_password' %}" class="find-password">비밀번호 찾기</a>
