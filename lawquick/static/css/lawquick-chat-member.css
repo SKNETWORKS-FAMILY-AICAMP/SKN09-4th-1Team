@@ -187,18 +187,28 @@ html, body {
   flex-direction: row;
 }
 
-.user-bubble,
-.bot-bubble {
+/* ✅ 말풍선 공통 */
+.user-bubble, .bot-bubble {
   background-color: #E3EFFF;
   padding: 12px 16px;
-  border-radius: 16px;
+  border-radius: 18px;
   font-size: 14px;
   line-height: 1.5;
   color: #01143F;
-  max-width: 80%;
+
+  /* ✅ 너비 조절 개선 */
+  min-width: 240px; /* ✅ 최소 너비 확보로 너무 짧은 말풍선 방지 */
+  max-width: 65%;
+  width: fit-content;
+
+  /* ✅ 텍스트 줄바꿈 및 정렬 */
   white-space: pre-wrap;
   word-break: break-word;
   text-align: left;
+
+  /* ✅ 시각적 정렬 안정성 */
+  display: inline-block;
+  box-sizing: border-box;
 }
 
 .timestamp {
@@ -321,10 +331,10 @@ html, body {
   width: 100%;
   max-width: 960px;
   padding: 90px 24px 140px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-sizing: border-box;
 }
 
 .header {
