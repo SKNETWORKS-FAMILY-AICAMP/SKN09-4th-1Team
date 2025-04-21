@@ -1,12 +1,12 @@
 import uuid
 from django.db import models
 
-
 # 사용자 정보 
 class User(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
+    is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -21,7 +21,7 @@ class UserInfo(models.Model):
     # 혼인 정보
     marital_skipped = models.BooleanField(default=False)
     marital_status = models.CharField(max_length=50, blank=True, null=True)
-    marriage_duration = models.FloatField(blank=True, null=True)
+    marriage_duration = models.CharField(max_length=50, blank=True, null=True)
     divorce_status = models.CharField(max_length=50, blank=True, null=True)
 
     # 자녀 정보
