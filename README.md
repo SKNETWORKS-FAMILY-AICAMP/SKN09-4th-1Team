@@ -128,6 +128,8 @@
 
 ## 06. 화면설계서
 
+[✅ 화면 설계서 바로가기](https://docs.google.com/presentation/d/15zIH85hUu1HvVMs0SRh4gG68GQS3g5Tn/edit?usp=sharing)
+
 <details>
 <summary>전체 화면 설계서</summary>
 <br>
