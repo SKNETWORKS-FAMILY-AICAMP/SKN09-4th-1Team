@@ -2,43 +2,6 @@ import pytest
 from django.urls import reverse
 from user.models import User, UserInfo
 
-# @pytest.mark.django_db
-# def test_info_submit_creates_guest_user_and_info(client):
-#     # ✅ 1. 모든 정보가 입력되었을 때 User와 UserInfo가 생성되는가?
-#     data = {
-#         "marital_status": "법적 혼인",
-#         "marriage_duration": "3년",
-#         "divorce_status": "이혼 고려중",
-#         "child_status": "yes",  # → 이걸 통해 has_children 만들어짐
-#         "children_ages": "10세",
-#         "property_range": "1억원 이상",
-#         "experience": "가정 불화 있음",
-#         "detail_info": "자녀 교육 문제로 다툼이 잦습니다.",
-#         "marriage_skip_btn": "off",
-#         "children_skip_btn": "off",
-#         "other_skip_btn": "off",
-#         "detail_skip_btn": "off",
-#     }
-
-#     response = client.post(reverse("user:info_submit"), data)
-
-#     # ✅ 디버깅을 위해: 실패시 form.errors 출력
-#     if response.status_code != 302:
-#         print("📌 status:", response.status_code)
-#         if hasattr(response, "context") and response.context:
-#             print("📋 form.errors:", response.context["form"].errors)
-#         else:
-#             print("❌ context 없음")
-
-#     # ✅ 테스트
-#     assert response.status_code == 302
-#     assert User.objects.count() == 1
-#     assert UserInfo.objects.count() == 1
-#     user_info = UserInfo.objects.first()
-#     assert user_info.marital_status == "법적 혼인"
-#     assert user_info.has_children is True
-#     assert user_info.children_ages == "10세"
-
 
 @pytest.mark.django_db
 def test_info_submit_creates_guest_user_and_info(client):
@@ -64,15 +27,11 @@ def test_info_submit_creates_guest_user_and_info(client):
 
     response = client.post(reverse("user:info_submit"), data)
 
-    # 검증: 리디렉션 되었는지
     assert response.status_code == 302
 
-    # DB 저장 ❌, 대신 세션 저장 확인
     session = client.session
     assert "guest_info" in session
     assert session["guest_info"]["marital_status"] == "법적 혼인"
-
-
 
 
 
@@ -133,60 +92,7 @@ def test_info_submit_with_skip_flags_as_member(client):
     assert info.other_skipped is True
     assert info.detail_skipped is True
 
-
-
-# @pytest.mark.django_db
-# def test_info_submit_with_authenticated_user(client):
-#     # ✅ 3. 로그인된 사용자가 제출하면 해당 user로 저장되는가?
-#     user = User.objects.create(email="auth@example.com", password="pw1234")
-#     client.force_login(user)
-#     response = client.post(reverse("user:info_submit"), {"marriage_status": "이혼"})
-#     info = UserInfo.objects.get(user=user)
-#     assert info.marital_status == "이혼"
-
-
-# @pytest.mark.django_db
-# def test_info_submit_with_authenticated_user(client):
-#     user = User.objects.create(email="auth@example.com", password="pw1234")
-
-#     # # 인증된 사용자처럼 만들기
-#     # client.force_login(user)  # 👉 장고에서 인증된 사용자로 인식함
-#     # force_login 대신 직접 세션 설정
-#     session = client.session
-#     session["user_id"] = str(user.id)
-#     session["user_email"] = user.email
-#     session.save()
-
-#     data = {
-#         "marital_status": "법적 혼인",
-#         "marriage_duration": "3년",
-#         "divorce_status": "이혼 고려중",
-#         "child_status": "yes",
-#         "has_children": True,
-#         "children_ages": "10세",
-#         "property_range": "1억원 이상",
-#         "experience": "가정 불화 있음",
-#         "detail_info": "자녀 교육 문제로 다툼이 잦습니다.",
-#         "marriage_skip_btn": "off",
-#         "children_skip_btn": "off",
-#         "other_skip_btn": "off",
-#         "detail_skip_btn": "off",
-#     }
-
-#     response = client.post(reverse("user:info_submit"), data)
-
-#     if response.status_code != 302 and hasattr(response, "context") and response.context:
-#         print(response.context["form"].errors)
-
-#     assert response.status_code == 302
-
-#     user_info = UserInfo.objects.get(user=user)
-#     assert user_info.marital_status == "법적 혼인"
-
-import pytest
-from django.urls import reverse
-from user.models import User, UserInfo
-
+# 로그인 후 개인정보 입력이 저장되는가?
 @pytest.mark.django_db
 def test_info_submit_with_authenticated_user(client):
     # 1. 회원 유저 생성

@@ -29,7 +29,7 @@ def test_login_fails_with_wrong_password(client):
         "password": "wrong"
     })
 
-    assert response.status_code == 200  # 실패 시 다시 same page
+    assert response.status_code == 200 
     assert "user_id" not in client.session
 
 
@@ -52,11 +52,11 @@ def test_logout_clears_session(client):
     session["user_email"] = "some@email.com"
     session.save()
 
-    response = client.get(reverse("user:home"))  # 먼저 로그인된 상태로 진입
+    response = client.get(reverse("user:home")) 
     assert "user_id" in client.session
 
     # 로그아웃 시도
-    response = client.get(reverse("user:home"))  # 중복 logout_view 제거되어 있으므로 스킵
+    response = client.get(reverse("user:home")) 
     client.session.flush()
 
     assert "user_id" not in client.session
