@@ -2,8 +2,6 @@
 
 <!-- 사이드바 -->
 <div class="sidebar" id="sidebar">
-
-  <!-- 사이드바 상단: 토글 + 새 채팅 -->
   <div class="sidebar-header-bar">
     <button id="sidebarToggle" class="chat-sidebar-btn">
       <img src="{% static 'images/sidebar.png' %}" alt="사이드바 열기">
@@ -13,17 +11,10 @@
     </a>
   </div>
 
-  <!-- 현재 채팅 (회원/게스트 공통) -->
   {% if current_chat %}
     <div class="current-chat">
       <img src="{% static 'images/chat-history.png' %}" alt="기록 아이콘">
       <span>{{ current_chat.chat_title|truncatechars:10 }}</span>
-      <span class="chat-active-indicator"></span>
-    </div>
-  {% else %}
-    <div class="current-chat">
-      <img src="{% static 'images/chat-history.png' %}" alt="기록 아이콘">
-      <span>새채팅</span>
       <span class="chat-active-indicator"></span>
     </div>
   {% endif %}
@@ -32,39 +23,29 @@
 
   {% if not is_guest %}
     {% if chat_list %}
-      {% regroup chat_list by created_at.date as grouped_chats %}
-      {% for group in grouped_chats %}
-        <div class="sidebar-date-label">
-          {% if group.grouper|date:"U"|add:"604800" > now|date:"U" %}
-            지난 7일
-          {% else %}
-            지난 30일
-          {% endif %}
-        </div>
-        {% for c in group.list %}
-          <div class="question-item{% if current_chat and current_chat.id == c.id %} active{% endif %}" id="chat-{{ c.id }}">
-            <div class="question-info" onclick="handleTitleClick(event, {{ c.id }})">
-              <img src="{% static 'images/chat-history.png' %}" alt="채팅 아이콘">
-              <input
-                class="question-text"
-                type="text"
-                id="chat-title-{{ c.id }}"
-                name="title"
-                value="{{ c.chat_title|truncatechars:10 }}"
-                readonly />
-            </div>
-            <div class="question-icons">
-              <i class="fas fa-pencil-alt" onclick="editChatTitle({{ c.id }})" title="제목 수정"></i>
-              <i class="fas fa-trash" onclick="deleteChat({{ c.id }})" title="삭제하기"></i>
-              <span class="chat-active-indicator"></span>
-            </div>
+      <div class="sidebar-date-label">지난 채팅 기록</div>
+      {% for c in chat_list %}
+        <div class="question-item{% if current_chat and current_chat.id == c.id %} active{% endif %}" id="chat-{{ c.id }}">
+          <div class="question-info" onclick="location.href='{% url 'chat:chat_talk_detail' c.id %}'">
+            <img src="{% static 'images/chat-history.png' %}" alt="채팅 아이콘">
+            <input
+              class="question-text"
+              type="text"
+              id="chat-title-{{ c.id }}"
+              name="title"
+              value="{{ c.chat_title|truncatechars:10 }}"
+              readonly />
           </div>
-        {% endfor %}
+          <div class="question-icons">
+            <i class="fas fa-pencil-alt" onclick="editChatTitle({{ c.id }})" title="제목 수정"></i>
+            <i class="fas fa-trash" onclick="deleteChat({{ c.id }})" title="삭제하기"></i>
+            <span class="chat-active-indicator"></span>
+          </div>
+        </div>
       {% endfor %}
     {% else %}
       <p class="guest-info-message">상담 기록이 없습니다.</p>
     {% endif %}
-
   {% else %}
     <div class="guest-info-message">
       <p>
@@ -76,33 +57,5 @@
   {% endif %}
 </div>
 
-<!-- 필요 JS -->
-<script src="{% static 'js/chat_member_sidebar.js' %}"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebar = document.getElementById('sidebar');
-    const appWrapper = document.querySelector('.app-wrapper');
-
-    sidebarToggle?.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-      appWrapper?.classList.toggle('sidebar-open');
-    });
-
-    const questionItems = document.querySelectorAll('.question-item');
-    questionItems.forEach(item => {
-      item.addEventListener('mouseenter', () => {
-        item.classList.add('active');
-        item.querySelectorAll('.question-icons i').forEach(icon => icon.style.display = 'inline');
-        item.querySelector('.chat-active-indicator').style.display = 'inline-block';
-      });
-      item.addEventListener('mouseleave', () => {
-        if (!item.classList.contains('selected')) {
-          item.classList.remove('active');
-        }
-        item.querySelectorAll('.question-icons i').forEach(icon => icon.style.display = 'none');
-        item.querySelector('.chat-active-indicator').style.display = 'none';
-      });
-    });
-  });
-</script>
+<!-- 아이콘용 FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

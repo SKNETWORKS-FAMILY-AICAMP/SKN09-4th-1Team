@@ -1,62 +1,53 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const sidebarToggleBtn = document.querySelector(".chat-sidebar-btn");
   const sidebar = document.getElementById("sidebar");
-  const appWrapper = document.querySelector(".app-wrapper");
-  const userIconBtn = document.querySelector(".chat-user-icon");
-  const userDropdown = document.querySelector(".chat-dropdown-menu");
+  const appWrapper = document.getElementById("appWrapper");
+  const sidebarButtons = document.querySelectorAll(".chat-sidebar-btn");
 
-  // 사이드바 열고 닫기
-  sidebarToggleBtn?.addEventListener("click", (e) => {
-    sidebar.classList.toggle("active");
-    document.body.classList.toggle("sidebar-open");
-    e.stopPropagation();
+  // 사이드바 토글
+  sidebarButtons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      sidebar.classList.toggle("active");
+      appWrapper?.classList.toggle("sidebar-open");
+    });
   });
 
-  // 사용자 드롭다운 토글
+  // 유저 드롭다운 토글
+  const userIconBtn = document.getElementById("chatUserIcon");
+  const userDropdown = document.getElementById("chatDropdownMenu");
+
   userIconBtn?.addEventListener("click", (e) => {
-    userDropdown.classList.toggle("show");
     e.stopPropagation();
+    userDropdown.classList.toggle("show");
   });
 
-  // 외부 클릭 시 드롭다운 닫기
+  // 외부 클릭 시 닫기
   document.addEventListener("click", () => {
     userDropdown?.classList.remove("show");
+    sidebar?.classList.remove("active");
+    appWrapper?.classList.remove("sidebar-open");
   });
 
-  // 사이드바 내부 클릭 이벤트 전파 방지
+  // 사이드바 내부 클릭 시 닫히지 않도록
   sidebar?.addEventListener("click", (e) => e.stopPropagation());
 });
 
-// 채팅 제목 클릭 → 해당 채팅으로 이동
+// 제목 클릭 시 이동
 function handleTitleClick(event, chatId) {
   const input = document.querySelector(`#chat-title-${chatId}`);
   if (!input.hasAttribute("readonly")) {
-    event.stopPropagation();
+    event.stopPropagation(); // 수정 중이면 이동 막기
     return;
   }
-
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = `/chat/member/chat/${chatId}/`;
-
-  const csrfToken = getCSRFToken();
-  const csrfInput = document.createElement("input");
-  csrfInput.type = "hidden";
-  csrfInput.name = "csrfmiddlewaretoken";
-  csrfInput.value = csrfToken;
-  form.appendChild(csrfInput);
-
-  document.body.appendChild(form);
-  form.submit();
+  goToChat(chatId);
 }
 
-// 제목 수정 시작
+// 제목 수정
 function editChatTitle(chatId) {
   const input = document.querySelector(`#chat-title-${chatId}`);
   input.removeAttribute("readonly");
   input.focus();
 
-  // 수정 중 클릭 막기
   input.addEventListener("mousedown", (e) => e.stopPropagation(), { once: true });
 
   input.addEventListener("keydown", (e) => {
@@ -71,7 +62,7 @@ function editChatTitle(chatId) {
   }, { once: true });
 }
 
-// 제목 수정 저장 요청
+// 제목 저장
 function saveChatTitle(chatId, input) {
   const newTitle = input.value.trim();
   if (!newTitle) {
@@ -102,6 +93,9 @@ function saveChatTitle(chatId, input) {
 function deleteChat(chatId) {
   if (!confirm("이 채팅을 삭제하시겠습니까?")) return;
 
+  const currentPath = window.location.pathname;
+  const isCurrentChat = currentPath.includes(`/member/chat/${chatId}/`);
+
   fetch(`/chat/member/delete/${chatId}/`, {
     method: "POST",
     headers: {
@@ -110,14 +104,43 @@ function deleteChat(chatId) {
   }).then((res) => {
     if (res.ok) {
       document.querySelector(`#chat-${chatId}`)?.remove();
-      window.location.href = "/chat/main/";
+
+      if (isCurrentChat) {
+        const firstRemainingChat = document.querySelector(".question-item");
+        if (firstRemainingChat) {
+          const firstInput = firstRemainingChat.querySelector("input");
+          if (firstInput) {
+            const id = firstInput.id.replace("chat-title-", "");
+            goToChat(id);
+          }
+        } else {
+          window.location.href = "/chat/main/";
+        }
+      }
     } else {
       alert("삭제 실패");
     }
   });
 }
 
-// CSRF 토큰 가져오기
+// 이동 함수
+function goToChat(chatId) {
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = `/chat/member/chat/${chatId}/`;
+
+  const csrfToken = getCSRFToken();
+  const csrfInput = document.createElement("input");
+  csrfInput.type = "hidden";
+  csrfInput.name = "csrfmiddlewaretoken";
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
+
+  document.body.appendChild(form);
+  form.submit();
+}
+
+// CSRF 토큰 추출
 function getCSRFToken() {
   const name = "csrftoken";
   const cookie = document.cookie.split(";").find((c) => c.trim().startsWith(name + "="));

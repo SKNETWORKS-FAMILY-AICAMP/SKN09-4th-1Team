@@ -22,8 +22,9 @@ def chat_main(request):
     is_guest = request.session.get("guest", False)
     user_id = request.session.get("user_id")
     guest_user_id = request.session.get("guest_user_id")
-    chat_list, current_chat, messages = [], None, []
     user_email = request.session.get("user_email")
+
+    chat_list, current_chat, messages = [], None, []
 
     if user_id and not is_guest:
         try:
@@ -84,43 +85,28 @@ def chat_member_start(request, chat_id):
 @require_POST
 @csrf_exempt
 def chat_send(request):
-    if request.method == "POST":
-        is_guest = request.session.get('guest', False)
-        user_id = request.session.get("guest_user_id") if is_guest else request.session.get("user_id")
+    is_guest = request.session.get('guest', False)
+    user_id = request.session.get("guest_user_id") if is_guest else request.session.get("user_id")
 
-        if not user_id:
-            return redirect('user:home')
+    if not user_id:
+        return redirect('user:home')
 
-        message = request.POST.get("message", "").strip()
-        if not message:
-            return redirect("chat:main")
+    message = request.POST.get("message", "").strip()
+    if not message:
+        return redirect("chat:main")
 
-        user = User.objects.get(id=user_id)
-        chat = Chat.objects.filter(user=user).order_by('-created_at').first()
-        if not chat:
-            chat = Chat.objects.create(user=user, chat_title=message[:10])
+    user = User.objects.get(id=user_id)
 
-        # 사용자 메시지 저장
-        Message.objects.create(chat=chat, sender="user", message=message)
+    # 새 채팅 생성
+    chat = Chat.objects.create(user=user, chat_title=message[:20])
 
-        # 가상 AI 응답
-        dummy_answer = "이혼 및 양육권 관련 법률 정보와 절차는 다음과 같습니다..."
-        Message.objects.create(chat=chat, sender="bot", message=dummy_answer)
+    # 메시지 저장
+    Message.objects.create(chat=chat, sender="user", message=message)
+    dummy_answer = "이혼 및 양육권 관련 법률 정보와 절차는 다음과 같습니다..."
+    Message.objects.create(chat=chat, sender="bot", message=dummy_answer)
 
-        # 현재 시각 및 출력 소요 시간
-        now = timezone.localtime()
-        now_time = now.strftime("%I:%M %p").lower()
-        output_duration = "출력 소요 시간: 75s"
-
-        return render(request, "chat/chat_talk.html", {
-            "user_message": message,
-            "bot_answer": dummy_answer,
-            "now_time": now_time,
-            "output_duration": output_duration,
-            "is_guest": is_guest,
-        })
-
-    return redirect('chat:main')
+    # chat_id로 redirect
+    return redirect('chat:chat_talk_detail', chat_id=chat.id)
 
 
 # 채팅 삭제
@@ -174,66 +160,39 @@ def chat_guest_view(request):
     return redirect('chat:main')
 
 # 가상 답변 테스트용 뷰
-def chat_talk_view(request):
+def chat_talk_view(request, chat_id):
+    is_guest = request.session.get('guest', False)
+    user_email = request.session.get("user_email")
+
+    try:
+        chat = Chat.objects.get(id=chat_id)
+    except Chat.DoesNotExist:
+        return redirect('chat:main')
+
+    # 🔐 사용자 세션 검증: 내 채팅인지 확인
+    user_id = request.session.get("guest_user_id") if is_guest else request.session.get("user_id")
+    if not user_id or str(chat.user.id) != str(user_id):
+        return redirect('chat:main')
+
+    # POST 요청이면 메시지 저장
     if request.method == "POST":
         message = request.POST.get("message", "").strip()
-        if not message:
-            return redirect('chat:chat_talk')
+        if message:
+            Message.objects.create(chat=chat, sender='user', message=message)
+            dummy_answer = "가상 응답입니다. 준비 중입니다."
+            Message.objects.create(chat=chat, sender='bot', message=dummy_answer)
+        return redirect('chat:chat_talk_detail', chat_id=chat.id)
 
-        is_guest = request.session.get('guest', False)
-        now = timezone.localtime()
-        now_time = now.strftime("%I:%M %p").lower()
+    messages = Message.objects.filter(chat=chat).order_by('created_at')
+    chat_list = Chat.objects.filter(user=chat.user).order_by('-created_at')
+    now = timezone.localtime()
+    now_time = now.strftime("%I:%M %p").lower()
 
-        dummy_answer = (
-            "1. 관련 법률 조항\n"
-            "민법 제909조 제2항은 부모가 자녀의 양육에 관한 권리와 의무를 가진다고 규정하고 있으며...\n\n"
-            "2. 주요 판례 요약\n"
-            "대법원 2001다20243 판결에서는 양육권을 결정할 때 자녀의 나이, 양육 환경, 경제력, 자녀의 의사 등을 종합적으로 고려해야 한다고 보았습니다.\n\n"
-            "3. 일반적인 법적 해석\n"
-            "법원은 자녀의 복리를 최우선으로 고려합니다. 자세한 내용은 전문가 상담을 권장드립니다."
-        )
-        output_duration = "출력 소요 시간: 75s"
-
-        if is_guest:
-            session_chat = request.session.get('guest_chat', [])
-            session_chat.append({
-                'question': message,
-                'answer': dummy_answer,
-                'time': now_time,
-                'duration': output_duration
-            })
-            request.session['guest_chat'] = session_chat
-
-        else:
-            user_id = request.session.get('user_id')
-            try:
-                user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                return redirect('user:home')
-
-            chat = Chat.objects.create(
-                user=user,
-                chat_title=message[:20],
-            )
-
-            Message.objects.create(
-                chat=chat,
-                role='user',
-                message=message,
-            )
-
-            Message.objects.create(
-                chat=chat,
-                role='bot',
-                message=dummy_answer,
-            )
-
-        return render(request, 'chat/chat_talk.html', {
-            'user_message': message,
-            'bot_answer': dummy_answer,
-            'now_time': now_time,
-            'output_duration': output_duration,
-            'is_guest': is_guest,
-        })
-
-    return render(request, 'chat/chat_talk.html')
+    return render(request, "chat/chat_talk.html", {
+        "messages": messages,
+        "current_chat": chat,
+        "chat_list": chat_list,
+        "user_email": user_email,
+        "is_guest": is_guest,
+        "now_time": now_time,
+    })
