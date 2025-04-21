@@ -221,11 +221,21 @@
 
 ### ✅ 채팅 
 * 비회원 채팅
-![image](https://github.com/user-attachments/assets/4affc4c8-b791-4105-80c8-a348b61277e7)
+![비회원_채팅_첫화면](https://github.com/user-attachments/assets/4cd307d8-626d-4935-9523-30a2d0d08be6)
+<br>
+
+* 비회원 사이드바
+![비회원_채팅](https://github.com/user-attachments/assets/ed0f1ece-0dc8-4ca7-a268-fb99329f2938)
 
 <br>
 
 * 회원 채팅
+![회원채팅_히스토리](https://github.com/user-attachments/assets/df402ee4-7a92-4d49-9f83-363f1f8af2c6)
+<br>
+
+* 회원 사이드바_채팅 히스토리
+![회원_채팅](https://github.com/user-attachments/assets/7f24ad26-fe90-4602-a1b1-997104e27e42)
+
 <br>
 
 ---
