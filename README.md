@@ -234,11 +234,11 @@
 <br>
 
 * 회원 채팅
-![회원채팅_히스토리](https://github.com/user-attachments/assets/df402ee4-7a92-4d49-9f83-363f1f8af2c6)
+![회원_채팅](https://github.com/user-attachments/assets/7f24ad26-fe90-4602-a1b1-997104e27e42)
 <br>
 
-* 회원 사이드바_채팅 히스토리
-![회원_채팅](https://github.com/user-attachments/assets/7f24ad26-fe90-4602-a1b1-997104e27e42)
+* 회원 사이드바
+![회원채팅_히스토리](https://github.com/user-attachments/assets/df402ee4-7a92-4d49-9f83-363f1f8af2c6)
 
 <br>
 
