@@ -7,6 +7,11 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('password/', views.find_password, name='find_password'),
     path('password/complete/', views.find_password_complete, name='find_password_complete'),
+    
+    path('logout/', views.logout_view, name='logout'),
+
+    path('chat/guest/', views.chat_guest_view, name='chat_guest'),
+
     path('info/', views.info, name='info'),
     path('info/submit', views.info_submit, name='info_submit'), 
     path('info/cancel', views.info_cancel, name='info_cancel'), 

@@ -49,10 +49,10 @@
           </div>
         {% endif %}
 
-        <a href="#" class="guest-link">비회원으로 진행하기</a>
+        <a href="{% url 'user:chat_guest' %}" class="guest-link">비회원으로 진행하기</a>
 
         <div class="button-row">
-          <button type="submit" class="btn-login">로그인</button>
+          <button type="submit" class="btn-login" onclick="location.href='{% url 'chat:main' %}">로그인</button>
           <button type="button" class="btn-join" onclick="location.href='{% url 'user:join_01' %}'">회원가입</button>
         </div>
 
