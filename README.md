@@ -195,6 +195,77 @@
 ---
 
 ## 09. 수행 결과
+
+### ✅ ERD
+<details>
+<summary><strong>ERD 상세</strong></summary>
+
+#### User 테이블
+
+| 필드명       | 타입     | 설명                             |
+|--------------|----------|----------------------------------|
+| `id`         | UUID     | 사용자 식별자 (Primary Key)       |
+| `email`      | varchar  | 사용자 이메일                     |
+| `password`   | varchar  | 사용자 비밀번호                   |
+| `is_verified`| boolean  | 이메일 인증 여부                  |
+| `created_at` | datetime | 생성 일시                         |
+
+
+#### UserInfo 테이블
+
+| 필드명             | 타입     | 설명                                       |
+|--------------------|----------|--------------------------------------------|
+| `user_id`          | UUID     | User와 1:1 관계 (Foreign Key)               |
+| `created_at`       | datetime | 생성 일시                                   |
+| `marital_skipped`  | boolean  | 혼인 정보 건너뛰기 여부                     |
+| `marital_status`   | varchar  | 혼인 상태                                   |
+| `marriage_duration`| varchar  | 혼인 기간                                   |
+| `divorce_status`   | varchar  | 이혼 의사 여부                              |
+| `children_skipped` | boolean  | 자녀 정보 건너뛰기 여부                     |
+| `has_children`     | boolean  | 자녀 유무                                   |
+| `children_ages`    | text     | 자녀 나이 정보                              |
+| `other_skipped`    | boolean  | 기타 정보 건너뛰기 여부                     |
+| `property_range`   | varchar  | 재산 범위                                   |
+| `experience`       | varchar  | 가정폭력 등 경험 여부                       |
+| `detail_skipped`   | boolean  | 상세 고민 건너뛰기 여부                     |
+| `detail_info`      | text     | 상세 고민 내용                              |
+
+
+#### Chat 테이블
+
+| 필드명       | 타입     | 설명                               |
+|--------------|----------|------------------------------------|
+| `id`         | int      | 채팅 식별자 (Primary Key)           |
+| `user_id`    | UUID     | User와 N:1 관계 (Foreign Key)       |
+| `chat_title` | text     | 채팅 제목                           |
+| `created_at` | datetime | 생성 일시                           |
+
+
+
+#### Message 테이블
+
+| 필드명       | 타입     | 설명                               |
+|--------------|----------|------------------------------------|
+| `id`         | int      | 메시지 식별자 (Primary Key)         |
+| `chat_id`    | int      | Chat과 N:1 관계 (Foreign Key)       |
+| `sender`     | varchar  | 보낸 사람 (user 또는 bot)           |
+| `message`    | text     | 메시지 내용                         |
+| `created_at` | datetime | 생성 일시                           |
+| `duration`   | float    | 응답까지 걸린 시간 (초 단위)       |
+
+
+#### 테이블 간 관계
+
+| 관계       | 설명                                                |
+|------------|-----------------------------------------------------|
+| `User` 1 : 1 `UserInfo` | 한 명의 사용자는 하나의 사용자 정보만 가짐     |
+| `User` 1 : N `Chat`     | 한 명의 사용자는 여러 개의 채팅 가능           |
+| `Chat` 1 : N `Message`  | 하나의 채팅은 여러 메시지를 포함 가능           |
+
+</details>
+
+
+
 ### ✅ 홈 
 * 홈 및 로그인
 ![screencapture-127-0-0-1-8080-2025-04-21-14_22_49](https://github.com/user-attachments/assets/850ab2a3-5627-4dc3-ac4d-20bdceb52b5a)
