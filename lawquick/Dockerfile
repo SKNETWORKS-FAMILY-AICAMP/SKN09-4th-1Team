@@ -11,6 +11,8 @@ WORKDIR /app
 # 4. requirements 복사 및 설치
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 # 5. 전체 프로젝트 복사
 COPY . .
