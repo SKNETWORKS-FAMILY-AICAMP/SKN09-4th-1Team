@@ -205,8 +205,9 @@ def join_user_email_certification(request):
                 'error': f'❌ 회원가입에 실패했습니다. 관리자에게 문의해주세요. ({str(e)})'
             })
 
+        response = redirect('user:join_04')
         request.session.flush()
-        return redirect('user:join_04')
+        return response
 
     return render(request, 'user/join_03.html', {
         'error': '❗ 인증 절차를 완료하려면 인증번호를 입력해주세요.'
