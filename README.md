@@ -182,10 +182,41 @@
 ---
 
 ## 09. 수행 결과
+### ✅ 홈 
+* 홈 및 로그인
+![127 0 0 1_8080_](https://github.com/user-attachments/assets/8ffd8a12-fedb-4db1-a1e2-2167b6763d40)
 
-- 실제 구동 영상 or Gradio 시연 링크  
-- 배포 환경 소개 및 사용 방법
+<br>
 
+### ✅ 회원가입
+* 회원 가입
+![screencapture-127-0-0-1-8080-join-2025-04-21-11_08_03](https://github.com/user-attachments/assets/73126b48-ac79-4dc1-b95d-d7c1c54061cb)
+
+<br>
+
+* 이메일 인증
+![screencapture-127-0-0-1-8080-join-2025-04-21-11_08_22](https://github.com/user-attachments/assets/097584b5-bcf3-45a4-a9b8-c0161226068f)
+
+<br>
+
+* 비밀번호 찾기
+![screencapture-127-0-0-1-8080-password-2025-04-21-11_12_23](https://github.com/user-attachments/assets/5b273710-2743-4c9e-b4c2-eb163637b360)
+
+<br>
+
+### ✅ 사용자 정보 입력 
+* 사용자 정보 입력 및 수정
+![screencapture-127-0-0-1-8080-info-2025-04-21-11_07_35](https://github.com/user-attachments/assets/27f81708-f55e-4722-82b8-8b274b01357b)
+
+<br>
+
+### ✅ 채팅 
+* 비회원 채팅
+
+<br>
+
+* 회원 채팅
+<br>
 ---
 
 ## 10. 한 줄 회고
