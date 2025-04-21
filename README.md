@@ -197,7 +197,7 @@
 ## 09. 수행 결과
 ### ✅ 홈 
 * 홈 및 로그인
-![127 0 0 1_8080_](https://github.com/user-attachments/assets/8ffd8a12-fedb-4db1-a1e2-2167b6763d40)
+![screencapture-127-0-0-1-8080-2025-04-21-14_22_49](https://github.com/user-attachments/assets/850ab2a3-5627-4dc3-ac4d-20bdceb52b5a)
 
 <br>
 
