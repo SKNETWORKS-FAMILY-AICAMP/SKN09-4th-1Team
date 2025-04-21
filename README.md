@@ -184,8 +184,16 @@
 - 정상 입력/비정상 입력 대응 여부 확인  
 
 ### ✅ 비정상 입력
-![스크린샷 2025-04-21 112223](https://github.com/user-attachments/assets/39e9ab28-07ab-4c90-8f4d-ed3d7bd18aa1)
+* 로그인 
+![스크린샷 2025-04-21 1249040](https://github.com/user-attachments/assets/537b96e7-71fd-44d9-8685-b2a8710a3bef)
+  - 로그인 불가 이유에 대한 안내문구 출력
 
+* 회원가입
+![screencapture-127-0-0-1-8080-join-2025-04-21-12_49_17](https://github.com/user-attachments/assets/821aa24b-b11b-432b-9fe4-3ad7e7221042)
+  - 아이디, 비밀번호 조건에 대한 안내문구 출력
+  
+* 사용자 정보 입력
+![스크린샷 2025-04-21 112223](https://github.com/user-attachments/assets/39e9ab28-07ab-4c90-8f4d-ed3d7bd18aa1)
   - 입력하지 않은 요소에 대한 안내문구 반환
 
 ---
