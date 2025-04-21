@@ -21,7 +21,7 @@
   </div>
 
   <div class="container">
-    <form method="post" action="{% url 'user:join_03' %}" id="joinForm">
+    <form method="post" action="{% url 'user:join_02' %}" id="joinForm">
       {% csrf_token %}
 
       <!-- 약관 -->
@@ -87,7 +87,7 @@
 
         <div class="button-row-wrapper">
           <div class="button-row">
-            <button type="submit" class="btn-confirm" onclick="location.href='{% url 'user:join_03' %}'">확인</button>
+            <button type="submit" class="btn-confirm">확인</button>
             <button type="button" class="btn-cancel" onclick="location.href='{% url 'user:home' %}'">취소</button>
           </div>
         </div>
