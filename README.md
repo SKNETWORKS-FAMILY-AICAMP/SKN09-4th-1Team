@@ -225,11 +225,13 @@
 
 ### ✅ 채팅 
 * 비회원 채팅
+![image](https://github.com/user-attachments/assets/4affc4c8-b791-4105-80c8-a348b61277e7)
 
 <br>
 
 * 회원 채팅
 <br>
+
 ---
 
 ## 10. 한 줄 회고
