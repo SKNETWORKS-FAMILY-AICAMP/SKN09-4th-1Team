@@ -1,4 +1,4 @@
-# 👩🏻‍⚖️ SK Networks AI CAMP 9기 - 4th 1Team: LawQuick
+# SK Networks AI CAMP 9기 - 4th 1Team: LawQuick
 
 - **주제:** AI 활용 애플리케이션 개발  
 - **개발 기간:** 2025.04.21 ~ 2025.04.22  
@@ -41,54 +41,63 @@
 ## 02. 프로젝트 개요
 
 ### ✅ 프로젝트 명: LawQuick  
-### ✅ 프로젝트 소개: 이혼 특화 AI 법률 상담 챗봇  
+### ✅ 프로젝트 소개: 이혼 특화 AI 법률 상담 웹 서비스  
 
-**LawQuick**은 이혼 분쟁을 겪는 사용자들이 법률 정보를 통해 자신의 상황을 이해하고 조언을 얻을 수 있도록 돕는 **AI 기반 가족법 상담 챗봇**입니다.
-
----
+**LawQuick**은 이혼을 준비하거나 고민하는 일반 사용자들이 자신의 상황에 맞는 법률 정보를 보다 쉽게 이해하고 활용할 수 있도록 돕는 AI 기반 가족법 상담 챗봇
 
 ### ✅ 프로젝트 필요성
 
-#### 📈 나홀로 소송 증가
-![image (5)](https://github.com/user-attachments/assets/9278a929-ee80-4aa8-b479-7b1c45dd8b75)  
+![image (5)](https://github.com/user-attachments/assets/9278a929-ee80-4aa8-b479-7b1c45dd8b75)
+
 ![image (6)](https://github.com/user-attachments/assets/5c91008a-dcb5-4d09-a6f6-0404a3573b4f)
 
 출처: [https://www.mk.co.kr/news/society/9878764](https://www.mk.co.kr/news/society/9878764)
 
-- 제대로 된 법률 서비스를 이용하려면 **높은 비용 부담**이 존재함  
-- 비용 문제로 법률 전문가의 도움 없이 소송을 진행하는 **'나홀로 소송'** 사례 증가
+#### 법률 상담의 사각지대 해소
+- 법률 서비스는 여전히 비용 부담과 복잡한 용어, 접근성의 어려움 등으로 인해 일반인에게 낯설고 진입장벽이 높습니다.
+- 특히 이혼과 같은 민감한 주제에서는 상담에 대한 심리적 거리감과 정보 부족으로 인해 초기 대응이 늦어지는 경우가 많습니다.
 
-#### 📚 법률 해석의 어려움
-
-- 정보는 많지만, **자신의 사례에 어떤 법이 적용되는지 알기 어려움**  
-- 판례나 조항의 해석이 어려워 **일반인의 이해에는 한계**
-
----
+#### 정보는 있지만, 내 상황에 맞는 해석은 부족
+- 다양한 온라인 정보와 판례가 존재하지만, 일반인은 자신의 상황에 어떤 법 조항이 적용되는지 판단하기 어렵습니다.
+- '나홀로 소송'이 증가하는 현실에서, 초기 법률 상담의 진입장벽을 낮춰줄 수 있는 서비스가 필요합니다.
 
 ### ✅ 프로젝트 목표
 
-#### 📈 법률 정보의 접근성 향상  
-- 복잡한 법률 용어를 **쉽고 간결한 Q&A 형식의 정보 제공**
+#### 핵심 방향성: 누구나 쉽게 접근할 수 있는 '초기 법률 상담' 지원 서비스 구현  
+이혼 문제를 겪고 있는 사용자가 변호사를 선임하기 전,  
+자신의 상황에 맞는 **초기 법률 조언을 간편하게 받을 수 있는 웹 서비스**를 구축하는 것이 목표입니다.
 
-#### 👤 개인화된 법률 조언 제공  
-- 단순 정보 나열이 아닌, **사용자 상황을 반영한 맞춤형 상담 응답**
+#### 세부 목표
 
-#### 💸 법률 서비스 진입장벽 완화  
-- **비용 부담 없이 초기 상담을 제공**하고, 사용자의 법적 고민을 가볍게 나눌 수 있는 창구 제공
+- **맞춤형 초기 상담 흐름 설계**  
+  사용자 정보(혼인 상태, 자녀, 재산 등)를 바탕으로  
+  상황에 적합한 법률 조언을 자연어로 제공
+
+- **웹 기반 상담 서비스 구현**  
+  Django를 활용해 정보 입력 → 상담 → 히스토리 저장까지 전체 흐름 개발  
+  회원/비회원 모두 사용 가능한 구조로 설계
+
+- **독립 실행 가능한 서비스 배포**  
+  Docker 기반 컨테이너화 및 AWS EC2 서버 배포를 통해  
+  실제 사용 가능한 웹 서비스 형태로 완성
 
 ---
 
 ## 03. 기술 스택
 
+## ✅ 기술 스택
+
 | 카테고리 | 기술 스택 |
 |----------|-------------------------------------------|
 | **사용 언어** | ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white) |
-| **LLM** | ![OpenChat](https://img.shields.io/badge/OpenChat-FFB000?style=for-the-badge&logo=OpenAI&logoColor=white) ![LangChain](https://img.shields.io/badge/LangChain-005F73?style=for-the-badge&logo=Chainlink&logoColor=white) |
+| **프레임워크** | ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=Django&logoColor=white) |
+| **LLM 연동** | ![OpenChat](https://img.shields.io/badge/OpenChat-FFB000?style=for-the-badge&logo=OpenAI&logoColor=white) ![LangChain](https://img.shields.io/badge/LangChain-005F73?style=for-the-badge&logo=Chainlink&logoColor=white) |
 | **벡터 데이터베이스** | ![FAISS](https://img.shields.io/badge/FAISS-009688?style=for-the-badge&logo=Apache&logoColor=white) |
 | **임베딩 모델** | ![OpenAI Embeddings](https://img.shields.io/badge/OpenAI%20Embeddings-8C9E90?style=for-the-badge&logo=OpenAI&logoColor=white) |
 | **실행 환경** | ![RunPod](https://img.shields.io/badge/RunPod-FF4500?style=for-the-badge&logo=Render&logoColor=white) |
 | **모델 튜닝/학습 프레임워크** | ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white) ![Transformers](https://img.shields.io/badge/Transformers-FFCC00?style=for-the-badge&logo=HuggingFace&logoColor=black) ![LoRA](https://img.shields.io/badge/LoRA-F76D57?style=for-the-badge&logo=HuggingFace&logoColor=white) |
-| **인터페이스(UI)** | ![Gradio](https://img.shields.io/badge/Gradio-20B673?style=for-the-badge&logo=Gradio&logoColor=white) |
+| **배포 및 컨테이너** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![Docker Compose](https://img.shields.io/badge/Docker--Compose-1488C6?style=for-the-badge&logo=Docker&logoColor=white) ![AWS EC2](https://img.shields.io/badge/AWS%20EC2-FF9900?style=for-the-badge&logo=Amazon%20AWS&logoColor=white) |
+| **DB 및 기타** | ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white) ![python-decouple](https://img.shields.io/badge/python--decouple-3776AB?style=for-the-badge&logo=Python&logoColor=white) |
 | **형상 관리 및 협업** | ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) ![Google Drive](https://img.shields.io/badge/Google%20Drive-4285F4?style=for-the-badge&logo=Google%20Drive&logoColor=white) |
 
 ---
@@ -102,68 +111,22 @@
 
 ![스크린샷 2025-04-18 162131](https://github.com/user-attachments/assets/2f377616-1702-4b08-8822-6842181c3cf2)
 
-### ✅ 사용자 정보
+### ✅ 사용자 관련 요구사항
 
-| 구분 | 요구사항 ID | 내용 요약 | 유형 | 중요도 | 난이도 |
-|------|--------------|---------------------------------------------|------|--------|--------|
-| 로그인 | REQ-LOGIN | 이메일/비밀번호 로그인 지원 | 기능 | 상 | 중 |
-|  |  | 비회원도 서비스 사용 가능 | 기능 | 중 | 중 |
-|  |  | 이메일로 비밀번호 찾기 | 기능 | 중 | 상 |
-| 회원가입 | REQ-JOIN | 계정 생성 기능 | 기능 | 상 | 중 |
-|  |  | 약관 동의 필수 | 기능 | 상 | 중 |
-|  |  | 약관 상세 보기 제공 | 기능 | 중 | 하 |
-|  |  | 전체 약관 동의 버튼 제공 | 기능 | 중 | 하 |
-|  |  | 이메일 입력 가능 | 기능 | 상 | 하 |
-|  |  | 이메일 도메인 선택 기능 | 기능 | 중 | 중 |
-|  |  | 이메일 인증 후 가입 완료 | 기능 | 상 | 상 |
-|  |  | 비밀번호는 문자 혼용 8~16자 | 기능 | 상 | 중 |
-|  |  | 가입 시 개인정보 입력 화면 이동 | 기능 | 중 | 하 |
-|  |  | 가입 확인/취소 버튼 시각 피드백 | 비기능 | 중 | 하 |
-|  |  | 가입 취소 시 입력 초기화 | 기능 | 중 | 중 |
+| **구분** | **요구사항 ID** | **요구사항 내용 요약** |
+|----------|------------------|--------------------------|
+| 로그인 | `REQ-LOGIN` | - 이메일과 비밀번호로 로그인 가능<br>- 비회원도 로그인 없이 서비스 사용 가능<br>- 이메일을 통해 비밀번호 찾기 기능 제공 |
+| 회원가입 | `REQ-JOIN` | - 회원가입 기능 제공<br>- 필수 약관 동의 후 가입 가능<br>- 약관별 상세보기 및 전체 동의 기능<br>- 이메일 입력 및 도메인 선택 기능<br>- 이메일 인증 후 가입 완료<br>- 비밀번호는 영문/숫자/특수문자 포함 8~16자 제한<br>- 가입 확인 시 개인정보 입력 화면으로 이동<br>- 확인/취소 버튼에 시각 피드백<br>- 가입 취소 시 기존 입력 정보 초기화 |
+| 개인정보 입력 | `REQ-PIIN` | - 혼인/자녀/재산/기타 이혼 관련 정보 입력 가능<br>- 상세 고민 입력 가능<br>- 각 항목별 설명 제공<br>- 확인 시 질의응답 화면으로 이동<br>- 취소 시 입력 초기화 및 이전 화면 이동<br>- 확인/취소 버튼 시각 피드백<br>- 항목별 건너뛰기 버튼 제공 |
+| 개인정보 수정 | `REQ-PIED` | - 정보 미입력 시 신규 입력 가능<br>- 기존 입력된 정보 수정 가능 |
 
-### ✅ 개인정보 입력
 
-| 구분 | 요구사항 ID | 내용 요약 | 유형 | 중요도 | 난이도 |
-|------|--------------|--------------------------------------------------|--------|--------|--------|
-| 개인정보입력 | REQ-PIIN | 혼인 정보 입력 | 기능 | 상 | 중 |
-|  |  | 자녀 정보 입력 | 기능 | 상 | 중 |
-|  |  | 재산 정보 입력 | 기능 | 상 | 중 |
-|  |  | 기타 정보 입력 | 기능 | 상 | 중 |
-|  |  | 상세 고민 입력 | 기능 | 중 | 중 |
-|  |  | 항목별 설명 제공 | 비기능 | 중 | 하 |
-|  |  | 확인 시 질의응답 화면으로 이동 | 기능 | 중 | 하 |
-|  |  | 취소 시 초기화 및 이전 화면 | 기능 | 중 | 중 |
-|  |  | 확인/취소 버튼 시각 피드백 | 비기능 | 중 | 하 |
-|  |  | 각 항목 건너뛰기 버튼 제공 | 기능 | 중 | 중 |
+### ✅ 채팅 관련 요구사항
 
-### ✅ 개인정보 수정
-
-| 구분 | 요구사항 ID | 내용 요약 | 유형 | 중요도 | 난이도 |
-|------|--------------|------------------------------------------------|--------|--------|--------|
-| 개인정보수정 | REQ-PIED | 정보 미입력 시 새 입력 가능 | 기능 | 상 | 중 |
-|  |  | 기존 정보 수정 가능 | 기능 | 상 | 중 |
-
-### ✅ 질의응답
-
-| 구분 | 요구사항 ID | 내용 요약 | 유형 | 중요도 | 난이도 |
-|------|--------------|---------------------------------------------|--------|--------|--------|
-| 질의응답 | REQ-CHAT | 질문 입력 가능 | 기능 | 상 | 하 |
-|  |  | 입력란 자동 확장 + 스크롤 | 비기능 | 중 | 중 |
-|  |  | 질문 말풍선 표시 | 비기능 | 중 | 하 |
-|  |  | 질문 시간 표시 | 기능 | 중 | 중 |
-|  |  | 답변 전 로딩 애니메이션 | 비기능 | 중 | 하 |
-|  |  | 답변 말풍선 표시 | 비기능 | 중 | 하 |
-|  |  | 답변 시간 표시 | 기능 | 중 | 중 |
-|  |  | 응답 소요 시간 표시 | 기능 | 중 | 중 |
-
-### ✅ 히스토리
-
-| 구분 | 요구사항 ID | 내용 요약 | 유형 | 중요도 | 난이도 |
-|------|--------------|---------------------------------------------|--------|--------|--------|
-| 히스토리 | REQ-HIST | 기존 채팅 확인 (사이드바) | 기능 | 중 | 중 |
-|  |  | 새 채팅/제목 수정 기능 | 기능 | 중 | 중 |
-|  |  | 최근 7일/30일 기준 정렬 | 기능 | 중 | 중 |
-
+| **구분** | **요구사항 ID** | **요구사항 내용 요약** |
+|----------|------------------|--------------------------|
+| 질의응답 | `REQ-CHAT` | - 질문 입력 기능<br>- 질문 입력란 자동 확장 및 스크롤 처리<br>- 질문은 말풍선 + 시각 정보로 출력<br>- 답변 전 로딩 애니메이션 제공<br>- 답변은 말풍선 + 응답 시각 및 소요 시간 함께 출력 |
+| 히스토리 | `REQ-HIST` | - 사이드바를 통해 이전 채팅 확인<br>- 새 채팅 시작 및 채팅 제목 수정 기능 제공<br>- 채팅 목록은 최근 7일/30일 기준으로 정렬 |
 
 ---
 
@@ -215,12 +178,7 @@
 
 ## 07. WBS (작업 분배표)
 
-| 역할 | 팀원 | 담당 업무 |
-|------|------|-----------|
-| 데이터 수집/전처리 | 김하늘 | 판례/법령 수집, 파싱 |
-| 벡터 DB 구축 | 박주은 | 임베딩 및 검색 구현 |
-| 챗봇 개발 | 유지은 | Gradio UI, 응답 생성 |
-| 프론트/폼 구현 | 박유진 | 사용자 입력 페이지, 유효성 검증 |
+![스크린샷 2025-04-21 094425](https://github.com/user-attachments/assets/62cb8525-24d5-4e90-9654-cb7dc5f02f94)
 
 ---
 
@@ -228,15 +186,50 @@
 
 - 주요 기능별 테스트 시나리오 작성  
 - 정상 입력/비정상 입력 대응 여부 확인  
-- 🖼️ 테스트 결과 캡처 포함 예정
+
+### ✅ 비정상 입력
+![스크린샷 2025-04-21 112223](https://github.com/user-attachments/assets/39e9ab28-07ab-4c90-8f4d-ed3d7bd18aa1)
+
+  - 입력하지 않은 요소에 대한 안내문구 반환
 
 ---
 
 ## 09. 수행 결과
+### ✅ 홈 
+* 홈 및 로그인
+![127 0 0 1_8080_](https://github.com/user-attachments/assets/8ffd8a12-fedb-4db1-a1e2-2167b6763d40)
 
-- 실제 구동 영상 or Gradio 시연 링크  
-- 배포 환경 소개 및 사용 방법
+<br>
 
+### ✅ 회원가입
+* 회원 가입
+![screencapture-127-0-0-1-8080-join-2025-04-21-11_08_03](https://github.com/user-attachments/assets/73126b48-ac79-4dc1-b95d-d7c1c54061cb)
+
+<br>
+
+* 이메일 인증
+![screencapture-127-0-0-1-8080-join-2025-04-21-11_08_22](https://github.com/user-attachments/assets/097584b5-bcf3-45a4-a9b8-c0161226068f)
+
+<br>
+
+* 비밀번호 찾기
+![screencapture-127-0-0-1-8080-password-2025-04-21-11_12_23](https://github.com/user-attachments/assets/5b273710-2743-4c9e-b4c2-eb163637b360)
+
+<br>
+
+### ✅ 사용자 정보 입력 
+* 사용자 정보 입력 및 수정
+![screencapture-127-0-0-1-8080-info-2025-04-21-11_07_35](https://github.com/user-attachments/assets/27f81708-f55e-4722-82b8-8b274b01357b)
+
+<br>
+
+### ✅ 채팅 
+* 비회원 채팅
+
+<br>
+
+* 회원 채팅
+<br>
 ---
 
 ## 10. 한 줄 회고
@@ -245,7 +238,7 @@
   - 처음엔 막막했지만, 우리만의 결과물을 만든 경험이 소중했습니다.
 
 - 💜 **박유진**  
-  - 사용자 입장에서 고민하며 개발하는 것이 정말 중요하다는 걸 느꼈어요!
+  - 기획부터 배포까지 전 과정을 경험하며,  **서비스가 왜 필요한지, 누구에게 어떤 가치를 줄 수 있는지를 이해하는 것이 가장 핵심**적임을 깨달았습니다. 이를 위해 **사용자 입장에서 문제를 정의하고 해결책**을 고민해보며, 결과적으로 기획·설계·개발·배포가 어떻게 **유기적으로 맞물리는지 실감**할 수 있었습니다.
 
 - 💙 **박주은**  
   - AI가 법률 서비스를 돕는 방법을 직접 구현하며 자신감이 생겼어요.
