@@ -7,6 +7,8 @@ from user.models import User
 from .models import Chat, Message
 import uuid
 import datetime
+from user.models import UserInfo
+import requests
 
 # 공통 진입점 (회원/비회원 분기)
 def chat_entry(request):
@@ -159,7 +161,6 @@ def chat_guest_view(request):
 
     return redirect('chat:main')
 
-# 가상 답변 테스트용 뷰
 def chat_talk_view(request, chat_id):
     is_guest = request.session.get('guest', False)
     user_email = request.session.get("user_email")
@@ -169,20 +170,55 @@ def chat_talk_view(request, chat_id):
     except Chat.DoesNotExist:
         return redirect('chat:main')
 
-    # 🔐 사용자 세션 검증: 내 채팅인지 확인
+    # 🔐 사용자 검증
     user_id = request.session.get("guest_user_id") if is_guest else request.session.get("user_id")
     if not user_id or str(chat.user.id) != str(user_id):
         return redirect('chat:main')
 
-    # POST 요청이면 메시지 저장
+
+    # ✅ POST 요청: 질문 저장 + RunPod 모델 호출
     if request.method == "POST":
         message = request.POST.get("message", "").strip()
         if message:
+            # 1. 질문 저장
             Message.objects.create(chat=chat, sender='user', message=message)
-            dummy_answer = "가상 응답입니다. 준비 중입니다."
-            Message.objects.create(chat=chat, sender='bot', message=dummy_answer)
+
+            # 2. 유저 정보 불러오기
+            try:
+                info = UserInfo.objects.get(user=chat.user)
+                user_info = {
+                    "marital_status": info.marital_status,
+                    "marriage_duration": info.marriage_duration,
+                    "divorce_status": info.divorce_status,
+                    "has_children": info.has_children,
+                    "children_ages": info.children_ages,
+                    "experience": info.experience,
+                    "property_range": info.property_range,
+                    "detail_info": info.detail_info,
+                }
+            except UserInfo.DoesNotExist:
+                user_info = {}
+
+            # 3. RunPod API 호출
+            try:
+                api_url = "http://x76r8kryd0u399-7004.proxy.runpod.net/chat"
+                payload = {
+                    "message": message,
+                    "user_info": user_info
+                }
+                res = requests.post(api_url, json=payload, timeout=60)
+                res.raise_for_status()
+                data = res.json()
+                answer = data.get("response", "⚠️ 응답이 없습니다.")
+            except Exception as e:
+                answer = f"❗ 오류 발생: {str(e)}"
+
+            # 4. 응답 저장
+            Message.objects.create(chat=chat, sender='bot', message=answer)
+
         return redirect('chat:chat_talk_detail', chat_id=chat.id)
 
+    # ✅ GET 요청: 채팅 화면 렌더링
     messages = Message.objects.filter(chat=chat).order_by('created_at')
     chat_list = Chat.objects.filter(user=chat.user).order_by('-created_at')
     now = timezone.localtime()
