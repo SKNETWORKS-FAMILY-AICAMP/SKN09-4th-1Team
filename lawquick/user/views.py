@@ -67,32 +67,11 @@ def info(request):
         return redirect('user:info')
     return render(request, 'user/info.html')
 
-# def get_or_create_user(request):
-#     if request.user.is_authenticated:
-#         return request.user, True
-#     temp_email = f"guest_{uuid.uuid4().hex[:10]}@example.com"
-#     user = User.objects.create(email=temp_email, password="guest_password")
-#     return user, False
-
-# 테스트용 수정
 def get_or_create_user(request):
-    """
-    세션 기반으로 유저를 가져오거나, 없으면 게스트 유저를 생성해서 반환.
-    Django 인증 미들웨어를 통하지 않음.
-    """
-    user_id = request.session.get("user_id") or request.session.get("guest_user_id")
-    if user_id:
-        try:
-            return User.objects.get(id=user_id), not request.session.get("guest", False)
-        except User.DoesNotExist:
-            pass
-
-    # 게스트 유저 새로 생성
+    if request.user.is_authenticated:
+        return request.user, True
     temp_email = f"guest_{uuid.uuid4().hex[:10]}@example.com"
     user = User.objects.create(email=temp_email, password="guest_password")
-    request.session["guest"] = True
-    request.session["guest_user_id"] = str(user.id)
-    request.session["user_email"] = user.email
     return user, False
 
 def info_submit(request):
