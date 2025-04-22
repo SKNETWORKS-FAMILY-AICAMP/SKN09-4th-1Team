@@ -170,6 +170,8 @@ LawQuick은 자신의 상황에 맞는 법률 정보를 보다 쉽게 이해하�
 <br>
 
 User Flow
+![USER-flow](https://github.com/user-attachments/assets/d21862a6-06b3-4a89-b0bd-18879b4b9806)
+
 
 Wire Flow
 ![wire_flow](https://github.com/user-attachments/assets/fae1fd03-b7d5-4e5b-86f7-b3b6d48c87ef)
@@ -259,8 +261,8 @@ Wire Flow
 
 ## 08. 테스트 계획 및 결과
   
-### 테스트 계획 및 대상
-**👤 User 관련 기능**
+### ✅ 테스트 계획 및 대상
+**User 관련 기능**
 - 로그인 기능을 테스트한다.
 - 로그아웃 기능을 테스트한다.
 - 이메일 인증 기능을 테스트한다.
@@ -270,11 +272,11 @@ Wire Flow
 - 비밀번호 유효성 검사를 테스트한다.
 - 개인정보 입력 기능을 테스트한다.
   
-**💬 Chat 관련 기능**
+**Chat 관련 기능**
 - 질문/답변 채팅 기능을 테스트한다.
 - 채팅 이력 조회 및 제목 수정, 삭제 기능을 테스트한다.
 
-### 테스트 결과
+### ✅ 테스트 결과
 ![스크린샷 2025-04-21 163346](https://github.com/user-attachments/assets/1ae7eff6-d92c-4a6c-a6f1-0316c0dc9725)
 
 ### ✅ 비정상 입력 케이스 테스트 결과
@@ -301,7 +303,7 @@ Wire Flow
 <br>
 
 ### ✅ 홈 
-* 홈 및 로그인
+**홈 및 로그인**
 ![screencapture-127-0-0-1-8080-2025-04-21-14_22_49](https://github.com/user-attachments/assets/850ab2a3-5627-4dc3-ac4d-20bdceb52b5a)
 
 <br>
@@ -386,6 +388,6 @@ Wire Flow
   - Docker를 이용해 FastAPI 모델 서버를 컨테이너화하면서, 환경 일관성 확보의 중요성과 Docker의 유용성을 알게 되었습니다. 이 경험을 통해 Django와 FastAPI 서버를 분리해도 안정적으로 배포 및 실행이 가능함을 직접 확인할 수 있었습니다.
 
 - 💚 **유지은**  
-  - 프로토타입 기반으로 django html을 통해 UIUX를 만들어가며 눈으로 볼 수 있는 것을 구현해가는 재미가 있었으며, 모델들을 docker 연결하고 EC2를 통해 배포를 찾아가는 과정에서 권한에러가 있었지만, wsl에서 해결하는 방법을 배웠습니다.
+  - 실제 이혼 상담 흐름을 구현하기 위해 프론트와 백엔드를 유기적으로 연결하며 실무형 챗봇을 완성해가는 과정이 인상 깊었습니다. 사용자 중심의 UX 설계와 법률 도메인 특화 AI 개발이 함께 성장한 값진 경험이었습니다.
 
 ---
