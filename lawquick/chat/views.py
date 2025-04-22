@@ -83,6 +83,36 @@ def chat_member_start(request, chat_id):
         'is_guest': False,
     })
 
+def get_user_info(user):
+    try:
+        info = UserInfo.objects.get(user=user)
+        return {
+            "marital_status": info.marital_status,
+            "marriage_duration": info.marriage_duration,
+            "divorce_status": info.divorce_status,
+            "has_children": info.has_children,
+            "children_ages": info.children_ages,
+            "experience": info.experience,
+            "property_range": info.property_range,
+            "detail_info": info.detail_info,
+        }
+    except UserInfo.DoesNotExist:
+        return {}
+
+def call_runpod_api(message, user_info):
+    try:
+        api_url = "https://x76r8kryd0u399-7004.proxy.runpod.net/chat"
+        payload = {
+            "message": message,
+            "user_info": user_info
+        }
+        res = requests.post(api_url, json=payload, timeout=120)
+        res.raise_for_status()
+        data = res.json()
+        return data.get("response", "⚠️ 응답이 없습니다.")
+    except Exception as e:
+        return f"❗ 오류 발생: {str(e)}"
+
 # 채팅 메시지 전송
 @require_POST
 @csrf_exempt
@@ -99,17 +129,18 @@ def chat_send(request):
 
     user = User.objects.get(id=user_id)
 
-    # 새 채팅 생성
+    # 새 채팅 생성 및 질문 저장
     chat = Chat.objects.create(user=user, chat_title=message[:20])
-
-    # 메시지 저장
     Message.objects.create(chat=chat, sender="user", message=message)
-    dummy_answer = "이혼 및 양육권 관련 법률 정보와 절차는 다음과 같습니다..."
-    Message.objects.create(chat=chat, sender="bot", message=dummy_answer)
 
-    # chat_id로 redirect
+    # 유저 정보 및 RunPod 호출
+    user_info = get_user_info(user)
+    answer = call_runpod_api(message, user_info)
+
+    # 응답 저장
+    Message.objects.create(chat=chat, sender="bot", message=answer)
+
     return redirect('chat:chat_talk_detail', chat_id=chat.id)
-
 
 # 채팅 삭제
 @require_POST
@@ -175,54 +206,23 @@ def chat_talk_view(request, chat_id):
     if not user_id or str(chat.user.id) != str(user_id):
         return redirect('chat:main')
 
-
-    # ✅ POST 요청: 질문 저장 + RunPod 모델 호출
+    # ✅ POST 요청 처리
     if request.method == "POST":
         message = request.POST.get("message", "").strip()
         if message:
-            # 1. 질문 저장
             Message.objects.create(chat=chat, sender='user', message=message)
 
-            # 2. 유저 정보 불러오기
-            try:
-                info = UserInfo.objects.get(user=chat.user)
-                user_info = {
-                    "marital_status": info.marital_status,
-                    "marriage_duration": info.marriage_duration,
-                    "divorce_status": info.divorce_status,
-                    "has_children": info.has_children,
-                    "children_ages": info.children_ages,
-                    "experience": info.experience,
-                    "property_range": info.property_range,
-                    "detail_info": info.detail_info,
-                }
-            except UserInfo.DoesNotExist:
-                user_info = {}
+            user_info = get_user_info(chat.user)
+            answer = call_runpod_api(message, user_info)
 
-            # 3. RunPod API 호출
-            try:
-                api_url = "http://x76r8kryd0u399-7004.proxy.runpod.net/chat"
-                payload = {
-                    "message": message,
-                    "user_info": user_info
-                }
-                res = requests.post(api_url, json=payload, timeout=60)
-                res.raise_for_status()
-                data = res.json()
-                answer = data.get("response", "⚠️ 응답이 없습니다.")
-            except Exception as e:
-                answer = f"❗ 오류 발생: {str(e)}"
-
-            # 4. 응답 저장
             Message.objects.create(chat=chat, sender='bot', message=answer)
 
         return redirect('chat:chat_talk_detail', chat_id=chat.id)
 
-    # ✅ GET 요청: 채팅 화면 렌더링
+    # ✅ GET 요청 처리
     messages = Message.objects.filter(chat=chat).order_by('created_at')
     chat_list = Chat.objects.filter(user=chat.user).order_by('-created_at')
-    now = timezone.localtime()
-    now_time = now.strftime("%I:%M %p").lower()
+    now_time = timezone.localtime().strftime("%I:%M %p").lower()
 
     return render(request, "chat/chat_talk.html", {
         "messages": messages,
