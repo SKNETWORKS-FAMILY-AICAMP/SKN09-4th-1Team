@@ -164,13 +164,25 @@ LawQuick은 자신의 상황에 맞는 법률 정보를 보다 쉽게 이해하�
 <br>
 </details>
 
+
+<details>
+<summary>서비스 플로우</summary>
+<br>
+
+User Flow
+
+Wire Flow
+![wire_flow](https://github.com/user-attachments/assets/fae1fd03-b7d5-4e5b-86f7-b3b6d48c87ef)
+</details>
+
 ---
 ## 07. 시스템 구성도
 
 ![시스템 아키텍처](https://github.com/user-attachments/assets/5f4d87ca-7085-40b8-b788-5b2af3c50959)
 
 ### ✅ ERD
-![ERD](https://github.com/user-attachments/assets/e9859605-2f6c-4cde-9008-449f8a868e25)
+![ERD_white](https://github.com/user-attachments/assets/57eb2498-c140-402f-8297-00b559ab0530)
+
 
 <details>
 <summary><strong>ERD 상세</strong></summary>
@@ -284,6 +296,7 @@ LawQuick은 자신의 상황에 맞는 법률 정보를 보다 쉽게 이해하�
 ## 09. 수행 결과
 
 ### ✅ [LawQuick 바로가기](http://13.124.112.16:8080/)
+### ✅ [시연 영상 바로가기](https://drive.google.com/file/d/1dyJHXgsPC0OkCOy3LDAB9vCKWf1qrwtA/view?usp=drive_link)
 
 <br>
 
@@ -370,7 +383,7 @@ LawQuick은 자신의 상황에 맞는 법률 정보를 보다 쉽게 이해하�
   - 기획부터 배포까지 전 과정을 경험하며,  **서비스가 왜 필요한지, 누구에게 어떤 가치를 줄 수 있는지를 이해하는 것이 가장 핵심**적임을 깨달았습니다. 이를 위해 **사용자 입장에서 문제를 정의하고 해결책**을 고민해보며, 결과적으로 기획·설계·개발·배포가 어떻게 **유기적으로 맞물리는지 실감**할 수 있었습니다.
 
 - 💙 **박주은**  
-  - AI가 법률 서비스를 돕는 방법을 직접 구현하며 자신감이 생겼어요.
+  - Docker를 이용해 FastAPI 모델 서버를 컨테이너화하면서, 환경 일관성 확보의 중요성과 Docker의 유용성을 알게 되었습니다. 이 경험을 통해 Django와 FastAPI 서버를 분리해도 안정적으로 배포 및 실행이 가능함을 직접 확인할 수 있었습니다.
 
 - 💚 **유지은**  
   - 프로토타입 기반으로 django html을 통해 UIUX를 만들어가며 눈으로 볼 수 있는 것을 구현해가는 재미가 있었으며, 모델들을 docker 연결하고 EC2를 통해 배포를 찾아가는 과정에서 권한에러가 있었지만, wsl에서 해결하는 방법을 배웠습니다.
