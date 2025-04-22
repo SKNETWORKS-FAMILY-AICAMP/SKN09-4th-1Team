@@ -13,7 +13,6 @@ gunicorn==23.0.0
 h11==0.14.0
 idna==3.10
 inflection==0.5.1
-mysqlclient==2.2.7
 packaging==24.2
 pillow==11.2.1
 pydantic==2.11.3
@@ -32,3 +31,5 @@ tzdata==2025.2
 uritemplate==4.1.1
 uvicorn==0.34.1
 wheel==0.45.1
+requests
+mysqlclient

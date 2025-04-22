@@ -22,19 +22,19 @@ services:
       retries: 5
 
   web:
-    build: ./lawquick
+    build: .
     container_name: lawquick-web
     restart: always
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./lawquick:/app
+      - .:/app
     ports:
       - "8080:8000"
     depends_on:
       db:
         condition: service_healthy 
     env_file:
-      - ./lawquick/.env
+      - .env
 
 volumes:
   db_data:
