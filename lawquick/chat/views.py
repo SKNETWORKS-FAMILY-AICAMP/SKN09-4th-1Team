@@ -114,6 +114,37 @@ def call_runpod_api(message, user_info):
         return f"❗ 오류 발생: {str(e)}"
 
 # 채팅 메시지 전송
+def get_user_info(user):
+    try:
+        info = UserInfo.objects.get(user=user)
+        return {
+            "marital_status": info.marital_status,
+            "marriage_duration": info.marriage_duration,
+            "divorce_status": info.divorce_status,
+            "has_children": info.has_children,
+            "children_ages": info.children_ages,
+            "experience": info.experience,
+            "property_range": info.property_range,
+            "detail_info": info.detail_info,
+        }
+    except UserInfo.DoesNotExist:
+        return {}
+
+def call_runpod_api(message, user_info):
+    try:
+        api_url = "https://x76r8kryd0u399-7004.proxy.runpod.net/chat"
+        payload = {
+            "message": message,
+            "user_info": user_info
+        }
+        res = requests.post(api_url, json=payload, timeout=120)
+        res.raise_for_status()
+        data = res.json()
+        return data.get("response", "⚠️ 응답이 없습니다.")
+    except Exception as e:
+        return f"❗ 오류 발생: {str(e)}"
+
+# 채팅 메시지 전송
 @require_POST
 @csrf_exempt
 def chat_send(request):
